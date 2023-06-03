@@ -49,6 +49,13 @@ function createWindow() {
 
     if (app.isPackaged) {
         mainWindow.loadFile(indexHtml)
+        // add shortcut for open devtools (F12 or Ctrl+Shift+I)
+        mainWindow.webContents.on('before-input-event', (event, input) => {
+            if ((input.key.toLowerCase() === 'f12') || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
+                mainWindow.webContents.openDevTools()
+                event.preventDefault()
+            }
+        })
     } else {
         mainWindow.loadURL(url)
         // add shortcut for open devtools (F12 or Ctrl+Shift+I)

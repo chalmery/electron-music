@@ -1,32 +1,40 @@
+$font : -apple-system;
+
 body {
-    margin: 0;
-    height: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  height: 100%;
+  font-family: $font;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-html,.layout,#root {height: 100%;}
+
+html, .layout, #root {
+  height: 100%;
+}
+
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  monospace;
 }
 
-:where(.css-dev-only-do-not-override-k7429z).ant-layout .ant-layout-sider{
-    background: none;
+:where(.css-dev-only-do-not-override-k7429z).ant-layout .ant-layout-sider {
+  background: none;
 }
 
-.background{
-    background-color: #FFFFFF
+.background {
+  background-color: #FFFFFF
 }
 
-.heightMax{
-    height: 100%
+.heightMax {
+  height: 100%
 }
 
-:where(.css-dev-only-do-not-override-k7429z).ant-menu-light.ant-menu-root.ant-menu-vertical{
-    border-right: 0
+:where(.css-dev-only-do-not-override-k7429z).ant-menu-light.ant-menu-root.ant-menu-vertical {
+  border-right: 0
 }
-.center{
-    text-align: center;
-    line-height: 100%;
-    padding: 10px 0 10px 0;
+
+.center {
+  text-align: center;
+  line-height: 100%;
+  padding: 10px 0 10px 0;
 }

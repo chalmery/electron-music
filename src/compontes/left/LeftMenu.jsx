@@ -3,7 +3,7 @@ import {Divider, Image, Menu, Modal} from 'antd';
 import {CloudOutlined, CustomerServiceTwoTone} from '@ant-design/icons';
 import Settings from "@/compontes/settings/Settings";
 import {withRouter} from "react-router-dom";
-
+import dog from '../../../public/dog.jpg';
 
 const items = [
     {
@@ -39,7 +39,7 @@ const LeftMenu = (props) => {
                 <Image
                     width={70}
                     onClick={() => {setOpen(true)}}
-                    src="../../../public/dog.jpg"
+                    src={dog}
                     preview={false}
                 />
             </div>

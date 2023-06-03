@@ -26,10 +26,8 @@ export default function Settings() {
     ];
 
 
-
-
     return (
-        <Layout className='layout' style={{backgroundColor: "#ffffff",height:"300px"}}>
+        <Layout className='layout' style={{backgroundColor: "#ffffff", height: "300px"}}>
             <Tabs
                 tabPosition={'left'}
                 items={items}

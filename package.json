@@ -1,19 +1,18 @@
 {
-    "name": "electron",
+    "name": "electron-music",
     "private": true,
     "version": "1.0.0",
-    "description": "electron",
+    "description": "electron音乐播放器",
     "main": "dist/electron/main/index.js",
     "author": "chalmery",
     "scripts": {
         "dev": "vite",
         "build": "vite build && electron-builder --config electron/electron-builder.json5"
     },
-    "dependencies": {
-        "antd": "^5.5.2",
-        "react-router-dom": "^5.2.0"
-    },
+    "dependencies": {},
     "devDependencies": {
+        "antd": "^5.5.2",
+        "react-router-dom": "^5.2.0",
         "@types/react": "^18.0.17",
         "@types/react-dom": "^18.0.6",
         "@vitejs/plugin-react": "^2.1.0",
