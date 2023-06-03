@@ -2,7 +2,6 @@ import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import electron from 'vite-plugin-electron'
-
 // https://vitejs.dev/config/
 export default defineConfig({
     resolve: {
@@ -35,6 +34,6 @@ export default defineConfig({
 
             // Enables use of Node.js API in the Electron-Renderer
             renderer: {},
-        }),
+        })
     ]
 })
