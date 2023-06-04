@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain,dialog} = require('electron')
 const { join } = require('path')
 
 process.env.DIST = join(__dirname, '../..')
@@ -10,6 +10,9 @@ const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.js')
+
+import eventType  from '../lib/event';
+
 
 if (!app.requestSingleInstanceLock()) {
     app.quit()
@@ -44,8 +47,15 @@ function createWindow() {
             preload,
             webviewTag: true,
             nodeIntegration: true,
+            enableRemoteModule: true,
+            contextIsolation: false,
+            nodeIntegrationInSubFrames: true
         }
     })
+    loadFile();
+}
+
+function loadFile() {
     if (app.isPackaged) {
         mainWindow.loadFile(indexHtml)
         // add shortcut for open devtools (F12 or Ctrl+Shift+I)
@@ -65,12 +75,11 @@ function createWindow() {
             }
         })
     }
-
     mainWindow.on('closed', () => {
         mainWindow = null
     })
-
 }
+
 
 app.whenReady().then(createWindow)
 
@@ -89,3 +98,18 @@ app.on('activate', () => {
         createWindow()
     }
 })
+
+ipcMain.on(eventType.OPEN_DIR.value, (event, data) => {
+    console.log(data)
+    openDir()
+})
+
+
+function openDir(){
+    let files = dialog.showOpenDialogSync({
+        title: '选择文件路径',
+        properties: ['openDirectory', 'multiSelections']
+    });
+    console.log(files)
+
+}

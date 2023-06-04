@@ -14,5 +14,8 @@ function domReady(condition = ['complete', 'interactive']) {
 }
 
 domReady().then(() => {
-    // do something when preload
+    window.electron = require('electron')
+    console.log('electron injection fin...')
 });
+
+
