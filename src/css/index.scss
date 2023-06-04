@@ -1,9 +1,6 @@
-$font : -apple-system;
-
 body {
   margin: 0;
   height: 100%;
-  font-family: $font;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -27,6 +24,10 @@ code {
 
 .heightMax {
   height: 100%
+}
+
+.widthMax {
+  width: 100%
 }
 
 :where(.css-dev-only-do-not-override-k7429z).ant-menu-light.ant-menu-root.ant-menu-vertical {

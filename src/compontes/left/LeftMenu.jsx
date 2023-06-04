@@ -23,11 +23,6 @@ const LeftMenu = (props) => {
     //模态框展示状态
     const [open, setOpen] = useState(false)
 
-    const ok = () => {
-        setOpen(false)
-        console.log("ok")
-    };
-
     const menuClick = (event) => {
         props.history.push(event.key)
     };
@@ -54,7 +49,7 @@ const LeftMenu = (props) => {
                 width={'800px'}
                 title="设置"
                 open={open}
-                onOk={ok}
+                footer={null}
                 onCancel={() => {
                     setOpen(false);
                 }}

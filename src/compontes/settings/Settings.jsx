@@ -1,8 +1,9 @@
 import React from 'react'
 import {Layout, Tabs} from 'antd';
-import BaseS from "@/compontes/settings/BaseS";
-import LocalS from "@/compontes/settings/LocalS";
-import Online from "@/compontes/center/Online";
+import BaseConf from "@/compontes/settings/BaseConf";
+import LocalConf from "@/compontes/settings/LocalConf";
+import About from "@/compontes/settings/About";
+import OnlineConf from "@/compontes/settings/OnlineConf";
 
 
 export default function Settings() {
@@ -11,17 +12,22 @@ export default function Settings() {
         {
             label: "基础设置",
             key: "/baseSetting",
-            children: <BaseS/>,
+            children: <BaseConf/>,
         },
         {
             label: "本地设置",
             key: "/localSetting",
-            children: <LocalS/>,
+            children: <LocalConf/>,
         },
         {
             label: "在线设置",
             key: "/onlineSetting",
-            children: <Online/>,
+            children: <OnlineConf/>,
+        },
+        {
+            label: "关于",
+            key: "/about",
+            children: <About/>,
         }
     ];
 

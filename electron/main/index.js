@@ -46,7 +46,6 @@ function createWindow() {
             nodeIntegration: true,
         }
     })
-
     if (app.isPackaged) {
         mainWindow.loadFile(indexHtml)
         // add shortcut for open devtools (F12 or Ctrl+Shift+I)

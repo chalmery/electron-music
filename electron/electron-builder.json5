@@ -2,8 +2,8 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "myapp",
-  productName: "myapp",
+  appId: "electron-music",
+  productName: "electron-music",
   copyright: "Copyright © 2022 ${author}",
   asar: true,
   directories: {
@@ -14,7 +14,7 @@
     "dist"
   ],
   win: {
-    icon: "icons/icon.ico",
+    icon: "public/icons/icon.svg",
     target: [
       {
         target: "dir",
@@ -31,7 +31,7 @@
     deleteAppDataOnUninstall: false,
   },
   linux: {
-    icon: "dist/icons/icon.svg",
+    icon: "public/icons/icon.svg",
     target: [
       "AppImage"
     ],
