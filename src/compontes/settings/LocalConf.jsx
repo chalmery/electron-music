@@ -1,17 +1,25 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Button, List, Space} from "antd";
 import localSetting from '../../../electron/lib/event.js'
 
-const electron  = window.electron
+const electron = window.electron
 
 export default function LocalConf() {
-    const localPaths = [
-        "1",
-        "2"
-    ]
+    const [localDir, setLocalDir] = useState();
+
+    useEffect(() => {
+        // Listen for the event
+        electron.ipcRenderer.on(localSetting.DIR_DATA_CALLBACK.value, (event, files) => {
+            console.log("回调对象" + files) //输出选择的文件
+            setLocalDir(files)
+        });
+        // Clean the listener after the component is dismounted
+        return () => {
+            electron.ipcRenderer.removeAllListeners(localSetting.DIR_DATA_CALLBACK.value);
+        };
+    }, []);
     //按钮loading
     const [loadings, setLoadings] = useState([]);
-
 
 
     const enterLoading = (index) => {
@@ -38,17 +46,17 @@ export default function LocalConf() {
 
 
     return (
-        <Space direction="vertical"  className={'widthMax'}>
-           <Space direction="horizontal">
-               <Button type="primary" onClick={openDirSelect}>选择目录</Button>
-               <Button loading={loadings[0]}
-                       onClick={() => enterLoading(0)}> 同步数据 < /Button>
-           </Space>
+        <Space direction="vertical" className={'widthMax'}>
+            <Space direction="horizontal">
+                <Button type="primary" onClick={openDirSelect}>选择目录</Button>
+                <Button loading={loadings[0]}
+                        onClick={() => enterLoading(0)}> 同步数据 < /Button>
+            </Space>
             <List
                 size="small"
                 header={<div>本地音乐文件目录</div>}
                 bordered
-                dataSource={localPaths}
+                dataSource={localDir}
                 renderItem={(item) => <List.Item>{item}</List.Item>}
             />
         </Space>

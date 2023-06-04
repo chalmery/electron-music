@@ -1,33 +1,58 @@
 import {dialog, ipcMain} from "electron";
 import localSetting from "../../lib/event";
-import {save} from "../../lib/fs";
+import {readSync, saveSync} from "../../lib/fs";
 import {parseString} from "../../lib/utils";
 
 function open() {
     let files = dialog.showOpenDialogSync({
         title: '选择文件路径',
         properties: ['openDirectory', 'multiSelections']
-    });
+    })
     console.log(files)
-    return files;
+    return files
 
 }
 
 function saveDir(files) {
-    //空值处理
-    let dataStr = files === null || files === undefined ? '[]' : parseString(files);
-    save('dirs', dataStr);
+
+    //1 先读取文件
+    let historyDir = readSync('dirs')
+    if (historyDir === null) {
+        historyDir = '[]'
+    }
+    console.log('historyDir ' + historyDir)
+
+
+    //2 拼接
+    let historyDirJson = JSON.parse(historyDir)
+    files.forEach((file) => {
+        historyDirJson.push(file)
+    })
+    let dataStr = parseString(historyDirJson)
+
+    //3 存储
+    saveSync('dirs', dataStr)
+
+    return dataStr;
+}
+
+
+//3 read callback
+function callback(event, dataDir) {
+    //发送消息，提示前端刷新
+    event.reply(localSetting.DIR_DATA_CALLBACK.value, dataDir)
 }
 
 
 const openDirAction = () => {
     ipcMain.on(localSetting.OPEN_DIR.value, (event, data) => {
         console.log(data)
-        //1 dir
+        //1 获取到选择的文件夹
         let files = open()
-        //2 save
-        saveDir(files)
-
+        //2 保存
+        let dataDir = saveDir(files)
+        //3 回调
+        callback(event, dataDir)
     })
 }
 
