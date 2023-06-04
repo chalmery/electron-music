@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain,dialog} = require('electron')
-const { join } = require('path')
+const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {join} = require('path')
 
 process.env.DIST = join(__dirname, '../..')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST, '../public')
@@ -11,7 +11,8 @@ const indexHtml = join(process.env.DIST, 'index.html')
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.js')
 
-import eventType  from '../lib/event';
+import {init} from "../init/init";
+import {listen} from "../listen/listen";
 
 
 if (!app.requestSingleInstanceLock()) {
@@ -22,10 +23,11 @@ if (!app.requestSingleInstanceLock()) {
 // Install `react-devtools`
 if (app.isPackaged === false) {
     app.whenReady().then(() => {
-        const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+        const {default: installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
 
         installExtension(REACT_DEVELOPER_TOOLS)
-            .then(() => { })
+            .then(() => {
+            })
             .catch(err => {
                 console.error('Unable to install `react-devtools`: \n', err)
             })
@@ -99,17 +101,7 @@ app.on('activate', () => {
     }
 })
 
-ipcMain.on(eventType.OPEN_DIR.value, (event, data) => {
-    console.log(data)
-    openDir()
-})
+//初始化
+init()
 
-
-function openDir(){
-    let files = dialog.showOpenDialogSync({
-        title: '选择文件路径',
-        properties: ['openDirectory', 'multiSelections']
-    });
-    console.log(files)
-
-}
+listen()

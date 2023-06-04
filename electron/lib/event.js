@@ -1,6 +1,7 @@
-let eventType = {
-    OPEN_DIR: {label: "打开本机文件夹选择器", value: "openDir"},
-    OPEN_FILE: {label: "打开本机文件选择器", value: "openFile"},
+//本地设置
+let localSetting = {
+    OPEN_DIR: {label: "选择目录", value: "openDir"},
+    SYNC_DATA: {label: "同步数据", value: "syncData"},
 }
 
-export default eventType;
+export default localSetting;

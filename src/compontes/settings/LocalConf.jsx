@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
 import {Button, List, Space} from "antd";
-const electron  = window.electron
+import localSetting from '../../../electron/lib/event.js'
 
-import eventType from '../../../electron/lib/event.js'
+const electron  = window.electron
 
 export default function LocalConf() {
     const localPaths = [
@@ -33,7 +33,7 @@ export default function LocalConf() {
     //传递打开本地文件选择器选项
     const openDirSelect = () => {
         console.log("start")
-        electron.ipcRenderer.send(eventType.OPEN_DIR.value, eventType.OPEN_DIR.value)
+        electron.ipcRenderer.send(localSetting.OPEN_DIR.value, localSetting.OPEN_DIR.value)
     };
 
 
