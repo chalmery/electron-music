@@ -25,15 +25,17 @@ function saveDir(files) {
 
     //2 拼接
     let historyDirJson = JSON.parse(historyDir)
+
     files.forEach((file) => {
         historyDirJson.push(file)
     })
+
     let dataStr = parseString(historyDirJson)
 
     //3 存储
     saveSync('dirs', dataStr)
 
-    return dataStr;
+    return historyDirJson;
 }
 
 
@@ -49,10 +51,12 @@ const openDirAction = () => {
         console.log(data)
         //1 获取到选择的文件夹
         let files = open()
-        //2 保存
-        let dataDir = saveDir(files)
-        //3 回调
-        callback(event, dataDir)
+        if (files !== null && files !== undefined) {
+            //2 保存
+            let dataDir = saveDir(files)
+            //3 回调
+            callback(event, dataDir)
+        }
     })
 }
 

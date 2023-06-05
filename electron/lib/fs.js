@@ -4,7 +4,7 @@ const fs = require("fs")
 
 //固定文件存储位置
 function getPath(fileName) {
-    let filePath = path.join(__dirname, '../data/' + fileName + '.json')
+    let filePath = path.join(__dirname, '../' + fileName + '.json')
     console.log("path " + filePath)
     return filePath
 }

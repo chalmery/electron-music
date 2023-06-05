@@ -46,6 +46,8 @@ const LeftMenu = (props) => {
                 onClick={menuClick}
             />
             <Modal
+                bodyStyle={{height: '100%', overflowY: 'auto'}}
+
                 width={'800px'}
                 title="设置"
                 open={open}

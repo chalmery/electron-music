@@ -12,6 +12,7 @@ export default function Settings() {
         {
             label: "基础设置",
             key: "/baseSetting",
+
             children: <BaseConf/>,
         },
         {

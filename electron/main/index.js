@@ -11,7 +11,6 @@ const indexHtml = join(process.env.DIST, 'index.html')
 // Here, you can also use other preload
 const preload = join(__dirname, '../preload/index.js')
 
-import {init} from "../init/init";
 import {listen} from "../listen/listen";
 
 
@@ -100,8 +99,5 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
-//初始化
-init()
 
 listen()
