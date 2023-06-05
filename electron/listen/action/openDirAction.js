@@ -27,7 +27,10 @@ function saveDir(files) {
     let historyDirJson = JSON.parse(historyDir)
 
     files.forEach((file) => {
-        historyDirJson.push(file)
+        //不存在再push
+        if (historyDirJson.indexOf(file) === -1) {
+            historyDirJson.push(file)
+        }
     })
 
     let dataStr = parseString(historyDirJson)
