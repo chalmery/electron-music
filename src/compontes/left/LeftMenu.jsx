@@ -47,8 +47,7 @@ const LeftMenu = (props) => {
             />
             <Modal
                 bodyStyle={{height: '100%', overflowY: 'auto'}}
-
-                width={'800px'}
+                width={'80%'}
                 title="设置"
                 open={open}
                 footer={null}

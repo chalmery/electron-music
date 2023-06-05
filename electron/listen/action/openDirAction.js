@@ -2,6 +2,7 @@ import {dialog, ipcMain} from "electron";
 import localSetting from "../../lib/event";
 import {readSync, saveSync} from "../../lib/fs";
 import {parseString} from "../../lib/utils";
+import dataName from "../../lib/dataName";
 
 function open() {
     let files = dialog.showOpenDialogSync({
@@ -36,7 +37,7 @@ function saveDir(files) {
     let dataStr = parseString(historyDirJson)
 
     //3 存储
-    saveSync('dirs', dataStr)
+    saveSync(dataName.DIRS.value, dataStr)
 
     return historyDirJson;
 }

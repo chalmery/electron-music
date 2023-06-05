@@ -50,9 +50,7 @@ function read(fileName, callback) {
     fs.readFile(getPath(fileName), 'utf-8', (err, data) => {
         if (err) {
             console.log(err)
-            return
         }
-        console.log(JSON.parse(data))
         if (callback !== undefined) {
             callback(data)
         }

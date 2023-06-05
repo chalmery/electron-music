@@ -8,11 +8,14 @@ export default function LocalConf() {
     const [localDir, setLocalDir] = useState();
 
     useEffect(() => {
-        // Listen for the event
+        //查数据
+        electron.ipcRenderer.send(localSetting.LOCAL_CONF_INIT.value, localSetting.LOCAL_CONF_INIT.value)
+
         electron.ipcRenderer.on(localSetting.DIR_DATA_CALLBACK.value, (event, files) => {
-            console.log("回调对象" + files) //输出选择的文件
+            console.log("回调对象" + files)
             setLocalDir(files)
         });
+
         // Clean the listener after the component is dismounted
         return () => {
             electron.ipcRenderer.removeAllListeners(localSetting.DIR_DATA_CALLBACK.value);
