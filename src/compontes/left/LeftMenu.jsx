@@ -41,7 +41,7 @@ const LeftMenu = (props) => {
             <Divider/>
             <Menu
                 theme="light"
-                mode="vertical"
+                mode="inline"
                 items={items}
                 onClick={menuClick}
             />

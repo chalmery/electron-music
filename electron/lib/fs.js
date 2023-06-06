@@ -20,7 +20,7 @@ function createDir(path) {
     })
 }
 
-//文件操作封装
+//存储文件
 function save(fileName, data, callback) {
     console.log("data " + data)
     fs.writeFile(getPath(fileName), data, (err) => {
@@ -35,6 +35,7 @@ function save(fileName, data, callback) {
     })
 }
 
+//同步存储文件
 function saveSync(fileName, data) {
     console.log("data " + data)
     fs.writeFileSync(getPath(fileName), data, (err) => {
@@ -46,6 +47,7 @@ function saveSync(fileName, data) {
     })
 }
 
+//读文件
 function read(fileName, callback) {
     fs.readFile(getPath(fileName), 'utf-8', (err, data) => {
         if (err) {
@@ -57,6 +59,7 @@ function read(fileName, callback) {
     })
 }
 
+//同步读文件
 function readSync(fileName) {
     let file = null
     try {
@@ -66,11 +69,11 @@ function readSync(fileName) {
     return file;
 }
 
+
 export {
     save,
     saveSync,
     read,
     readSync,
-    getPath,
-    createDir
+    getPath
 }

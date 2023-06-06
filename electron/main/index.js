@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, Tray, Menu, nativeImage} = require('electron')
 const {join} = require('path')
 
 process.env.DIST = join(__dirname, '../..')
@@ -82,7 +82,23 @@ function loadFile() {
 }
 
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+    createWindow()
+
+    //
+    const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/dog.jpg'))
+    let tray = new Tray(icon)
+    const contextMenu = Menu.buildFromTemplate([
+        {label: '播放', type: 'radio'},
+        {label: '上一首', type: 'radio'},
+        {label: '下一首', type: 'radio', checked: true},
+        {label: '退出', type: 'radio'}
+    ])
+
+    tray.setContextMenu(contextMenu)
+    tray.setToolTip('This is my application')
+    tray.setTitle('This is my title')
+})
 
 app.on('browser-window-created', function (e, window) {
     window.setMenu(null);

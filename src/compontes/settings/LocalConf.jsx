@@ -25,19 +25,8 @@ export default function LocalConf() {
     const [loadings, setLoadings] = useState([]);
 
 
-    const enterLoading = (index) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[index] = true;
-            return newLoadings;
-        });
-        setTimeout(() => {
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[index] = false;
-                return newLoadings;
-            });
-        }, 6000);
+    const enterLoading = () => {
+        electron.ipcRenderer.send(localSetting.SYNC_DATA.value, localDir)
     };
 
 
@@ -53,7 +42,7 @@ export default function LocalConf() {
             <Space direction="horizontal">
                 <Button type="primary" onClick={openDirSelect}>选择目录</Button>
                 <Button loading={loadings[0]}
-                        onClick={() => enterLoading(0)}> 同步数据 < /Button>
+                        onClick={enterLoading}> 同步数据 < /Button>
             </Space>
             <List
                 size="small"
