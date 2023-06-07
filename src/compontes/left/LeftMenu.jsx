@@ -3,7 +3,7 @@ import {Divider, Image, Menu, Modal} from 'antd';
 import {CloudOutlined, CustomerServiceTwoTone} from '@ant-design/icons';
 import Settings from "@/compontes/settings/Settings";
 import {withRouter} from "react-router-dom";
-import dog from '../../../public/dog.jpg';
+import dog from '/dog.jpg';
 
 const items = [
     {
