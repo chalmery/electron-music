@@ -29,17 +29,20 @@ const LeftMenu = (props) => {
 
 
     return (
-        <div className={'background heightMax'}>
+        <div className={'leftBg heightMax'}>
             <div className={'center'}>
                 <Image
                     width={70}
-                    onClick={() => {setOpen(true)}}
+                    onClick={() => {
+                        setOpen(true)
+                    }}
                     src={dog}
                     preview={false}
                 />
             </div>
             <Divider/>
             <Menu
+                style={{border: 0}}
                 theme="light"
                 mode="inline"
                 items={items}

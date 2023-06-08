@@ -1,6 +1,7 @@
 body {
   margin: 0;
   height: 100%;
+  background-color: #F5F5F5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -18,8 +19,16 @@ code {
   background: none;
 }
 
-.background {
+.leftBg {
   background-color: #FFFFFF
+}
+
+.centerBg {
+  background-color: #FAFAFA
+}
+
+.rightBg {
+  background-color: #F5F5F5
 }
 
 .heightMax {
