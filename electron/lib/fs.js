@@ -22,7 +22,6 @@ function createDir(path) {
 
 //存储文件
 function save(fileName, data, callback) {
-    console.log("data " + data)
     fs.writeFile(getPath(fileName), data, (err) => {
         if (err) {
             console.log("save error " + err)

@@ -5,6 +5,8 @@ import {Content} from "antd/es/layout/layout";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
 
+const MenuItem = Menu.Item;
+
 
 export default function Local() {
 
@@ -21,19 +23,11 @@ export default function Local() {
     const [dirList, setDirList] = useState([]);
     const [dataSource, setDataSource] = useState([]);
 
-
-    const items = [
-        // {
-        //     label: "本地音乐",
-        //     key: "/local",
-        // },
-        // {
-        //     label: "在线歌单",
-        //     key: "/online",
-        // }
-    ];
-    const menuClick = (event) => {
-        console.log(event)
+    const menuClick = (item, key, keyPath, domEvent) => {
+        console.log(item)
+        console.log(key)
+        console.log(keyPath)
+        console.log(domEvent)
     };
 
 
@@ -43,8 +37,7 @@ export default function Local() {
 
         //回调
         electron.ipcRenderer.on(dataEvent.LOCAL_CALLBACK.value, (event, data) => {
-            console.log(data)
-            // setLocalDir(files)
+            setDirList(data)
         });
 
         return () => {
@@ -52,6 +45,23 @@ export default function Local() {
         };
 
     }, []);
+
+    const handleMenuClick = ({key}) => {
+        const selectedItem = dirList.find((item) => item.key === key);
+        if (selectedItem) {
+            const {value} = selectedItem;
+            console.log('Clicked item value:', value);
+            // 在这里处理菜单项点击事件，可以获取当前行对应的 value 值
+        }
+    };
+
+    const renderMenuItems = () => {
+        return dirList.map((item) => (
+            <MenuItem key={item.key}>{item.label}</MenuItem>
+        ));
+    };
+
+    const menuItems = renderMenuItems();
 
     return (
         <Layout className='layout centerBg'>
@@ -62,9 +72,11 @@ export default function Local() {
                         style={{border: 0}}
                         theme="light"
                         mode="inline"
-                        items={items}
-                        onClick={menuClick}
-                    />
+                        onClick={handleMenuClick}
+                    >
+                        {menuItems}
+                    </Menu>
+
                 )}
             </Sider>
             <Layout className='rightBg'>

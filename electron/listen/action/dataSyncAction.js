@@ -10,7 +10,7 @@ const fileTypeList = ['FLAC', 'flac', 'MP3', 'mp3', 'ape', 'APE', 'MPEG', 'Ogg']
 
 
 //TODO 递归
-function readDir(dir, fileMap) {
+function readDir(dir, fileList) {
     try {
         let files = readdirSync(dir, 'utf-8')
         if (files === null || files === undefined) {
@@ -20,9 +20,12 @@ function readDir(dir, fileMap) {
             let filePath = dir + "/" + file
             let info = statSync(filePath);
             if (info.isFile()) {
-                fileMap.set(dir, filePath)
+                fileList.push({
+                    dir: dir,
+                    filePath: filePath
+                })
             } else {
-                readDir(filePath, fileMap)
+                readDir(filePath, fileList)
             }
         })
     } catch (err) {
@@ -33,29 +36,28 @@ function readDir(dir, fileMap) {
 /**
  * 获取文件夹下的文件
  * @param dirs
- * @returns {Map<String, String>}
  */
 function batchReadDir(dirs) {
     //解析文件
-    let fileMap = new Map()
+    let fileList = []
     dirs.forEach((dir) => {
-        readDir(dir, fileMap)
+        readDir(dir, fileList)
     })
-    return fileMap;
+    return fileList;
 }
 
 
 /**
  * 父级目录，文件路径
- * @param {*} fileMap 父级目录，文件信息对象{文件标题等}
+ * @param {[]} fileList 父级目录，文件信息对象{文件标题等}
  * @param callback function
  * @param event electron 事件
  */
-function parseMetaData(fileMap, callback, event) {
-    let metaMap = new Map();
-    let mapSize = fileMap.size;
-    fileMap.forEach((value, key) => {
-        let promise = parseFile(value)
+function parseMetaData(fileList, callback, event) {
+    let metaList = [];
+    let mapSize = fileList.length;
+    fileList.forEach((value) => {
+        let promise = parseFile(value.filePath)
         promise.then((data) => {
             if (data !== null && data !== undefined && fileTypeList.includes(data.format.container)) {
                 let metadata = {
@@ -63,20 +65,23 @@ function parseMetaData(fileMap, callback, event) {
                     artist: data.common.artist,
                     album: data.common.album,
                     picture: null,
-                    path: value,
+                    path: value.filePath,
                     duration: data.format.duration,
                     type: data.format.container
                 }
                 if (data.common.picture !== undefined && data.common.picture.length !== 0) {
                     metadata.picture = data.common.picture[0].data
                 }
-                metaMap.set(key, metadata)
+                metaList.push({
+                    key: value.dir,
+                    value: metadata
+                })
 
             }
         }).finally(() => {
             mapSize -= 1
             if (mapSize === 0) {
-                callback(metaMap, event)
+                callback(metaList, event)
             }
         })
     })
@@ -85,12 +90,19 @@ function parseMetaData(fileMap, callback, event) {
 
 /**
  * 存储
- * @param metaMap
+ * @param fileList
  * @param event
  */
-function storage(metaMap, event) {
-    save(dataName.META_DATA.value, JSON.stringify(Object.fromEntries(metaMap)), () => {
-        console.log("回调开始")
+function call(fileList, event) {
+    const groupedArray = fileList.reduce((acc, obj) => {
+        const {key, value} = obj;
+        if (!acc[key]) {
+            acc[key] = {key, label: key, value: []};
+        }
+        acc[key].value.push(value);
+        return acc;
+    }, {});
+    save(dataName.META_DATA.value, JSON.stringify(Object.values(groupedArray)), () => {
         event.reply(localSetting.SYNC_DATA_CALLBACK.value, null)
     })
 }
@@ -99,9 +111,9 @@ function storage(metaMap, event) {
 const dataSyncAction = () => {
     ipcMain.on(localSetting.SYNC_DATA.value, (event, data) => {
         //找这些目录的音乐
-        let fileMap = batchReadDir(data)
-        //解析元数据,存储
-        parseMetaData(fileMap, storage, event)
+        let fileList = batchReadDir(data)
+        // //解析元数据,存储
+        parseMetaData(fileList, call, event)
     })
 }
 
