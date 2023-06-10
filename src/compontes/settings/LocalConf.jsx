@@ -22,7 +22,6 @@ export default function LocalConf() {
         //回调
         electron.ipcRenderer.on(localSetting.SYNC_DATA_CALLBACK.value, (event, data) => {
             setLoading(false)
-            console.log("同步成功")
             message.success('同步成功', 2);
         });
 

@@ -7,6 +7,10 @@ let localSetting = {
     SYNC_DATA: {label: "同步数据", value: "syncData"},
     SYNC_DATA_CALLBACK: {label: "同步数据回调", value: "syncDataCallBack"},
 
+    //本地音乐
+    LOCAL: {label: "本地音乐", value: "local"},
+    LOCAL_CALLBACK: {label: "本地音乐回调", value: "localCallback"},
+
 
 }
 
