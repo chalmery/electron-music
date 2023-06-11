@@ -71,9 +71,9 @@ function parseMetaData(fileList, callback, event) {
                     duration: data.format.duration,
                     type: data.format.container
                 }
-                if (data.common.picture !== undefined && data.common.picture.length !== 0) {
-                    metadata.picture = data.common.picture[0].data
-                }
+                // if (data.common.picture !== undefined && data.common.picture.length !== 0) {
+                //     metadata.picture = data.common.picture[0].data
+                // }
                 metaList.push({
                     key: value.dir,
                     value: metadata

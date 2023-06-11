@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Progress} from "antd";
 import {
     AlignCenterOutlined,
@@ -14,7 +14,38 @@ import {
 
 import dog from "/dog.jpg";
 
+import eventManager from "../../event/eventManager";
+
 function MyFooter() {
+    const [title, setTitle] = useState("听你想听的歌");
+    const [duration, setDuration] = useState('00:00');
+
+    useEffect(() => {
+        const handleEvent = (data) => {
+            // 处理事件
+            let {title, artist, album, type, path, duration} = data
+            setTitle(title)
+            setDuration(formatTime(duration))
+        };
+
+        // 订阅事件
+        eventManager.subscribe("myEvent", handleEvent);
+
+        // 取消订阅
+        return () => {
+            eventManager.unsubscribe("myEvent", handleEvent);
+        };
+    }, []);
+
+    function formatTime(seconds) {
+        const totalSeconds = Math.floor(seconds); // 取整数部分
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        const formattedMins = mins.toString().padStart(2, '0');
+        const formattedSecs = secs.toString().padStart(2, '0');
+        return `${formattedMins}:${formattedSecs}`;
+    }
+
     return (
         <div style={{width: "100%", display: "inline-flex"}}>
       <span
@@ -24,7 +55,7 @@ function MyFooter() {
               display: "inline-flex",
               padding: "0 10px 0 10px",
               justifyContent: "space-between",
-              borderRight: '1px solid rgb(222, 222, 222)'
+              borderRight: "1px solid rgb(222, 222, 222)",
           }}
       >
         <LeftCircleOutlined/>
@@ -39,8 +70,8 @@ function MyFooter() {
           <img width={"50px"} src={dog}/>
         </div>
         <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>
-          <span>歌曲名称</span>
-          <span style={{float: "right"}}>00:00/00:00</span>
+          <span>{title}</span>
+          <span style={{float: "right"}}>00:00/{duration}</span>
           <Progress size={"small"} className={"widthMax"} showInfo={false}/>
         </span>
       </span>
@@ -54,7 +85,7 @@ function MyFooter() {
                     //   padding: "0 5% 0 5%",
                     justifyContent: "space-between",
                     flexBasis: "100px",
-                    borderLeft: '1px solid rgb(222, 222, 222)'
+                    borderLeft: "1px solid rgb(222, 222, 222)",
                 }}
             >
         <FontColorsOutlined/>

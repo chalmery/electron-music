@@ -16,13 +16,13 @@ export default function Admin() {
             <Sider>
                 <LeftMenu/>
             </Sider>
-            <Content style={{position: "relative", height: "100vh",}}>
+            <Content style={{position: "relative", height: "100vh", overflow: 'hidden',}}>
                 <CacheSwitch>
                     <Redirect from="/" exact to="/"/>
-                    <CacheRoute path="/local" component={Local}/>
+                    <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
                     <CacheRoute path="/online" component={Online}/>
                 </CacheSwitch>
-                <Footer style={{width: "100%", position: "absolute", bottom: 0, padding: 0, margin: 0}}>
+                <Footer style={{width: "100%", position: "absolute", bottom: 0, padding: 0, margin: 0,}}>
                     <MyFooter/>
                 </Footer>
             </Content>

@@ -67,3 +67,14 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   background-color: #FFFFFF;
 
 }
+
+
+/* 隐藏滚动条 */
+.scrollable-container::-webkit-scrollbar {
+  width: 0;
+  background-color: transparent;
+}
+
+:root {
+  --header-height: 54px;
+}

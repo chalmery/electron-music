@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Layout, Menu, Table} from "antd";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
+import eventManager from '../../event/eventManager';
 
 const {Footer, Content, Sider} = Layout;
 
@@ -16,6 +17,9 @@ export default function Local() {
 
     const [dirList, setDirList] = useState([]);
     const [dataSource, setDataSource] = useState([]);
+    const containerStyle = {
+        height: `calc(100vh - var(--header-height))`,
+    };
 
 
     useEffect(() => {
@@ -43,7 +47,7 @@ export default function Local() {
 
     return (
         <Layout className='layout'>
-            <Sider>
+            <Sider className='scrollable-container' style={{overflow: 'auto'}}>
                 {dirList.length > 0 && (
                     <Menu
                         style={{border: 0}}
@@ -56,24 +60,28 @@ export default function Local() {
                 )}
             </Sider>
 
-            <Content>
-                {dataSource.length > 0 && (
-                    <Table
-                        onRow={(record) => {
-                            return {
-                                onClick: (event) => {
-                                    console.log(record)
-                                }
-                            };
-                        }}
-                        bordered={true}
+            <Content className='scrollable-container' style={{overflow: 'auto', height: "100vh"}}>
+                {dataSource.length > 0 && (<>
+                        <Table
+
+                            onRow={(record) => {
+                                return {
+                                    onClick: (event) => {
+                                        eventManager.publish('myEvent', record);
+                                    }
+                                };
+                            }}
+                            bordered={true}
                             size={"small"}
                             columns={columns}
                             pagination={false}
                             dataSource={dataSource}
                         />
-                    )}
-                </Content>
+                        <div style={{height: "54px"}}></div>
+                    </>
+                )}
+
+            </Content>
 
 
         </Layout>
