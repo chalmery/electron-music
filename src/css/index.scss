@@ -67,6 +67,10 @@ code {
   height: 100vh;
 }
 
+:where(.css-12jzuas).ant-layout .ant-layout-sider {
+  background-color: #FFFFFF;
+}
+
 main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   background-color: #FFFFFF;
 

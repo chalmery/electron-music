@@ -8,33 +8,33 @@
   asar: true,
   directories: {
     output: "release/${version}",
-    buildResources: "public",
+    buildResources: "public"
   },
   files: [
     "dist"
   ],
   win: {
-    icon: "public/icons/icon.svg",
+    icon: "public/icons/music256x256.png",
     target: [
       {
         target: "dir",
         arch: [
           "x64"
-        ],
-      },
-    ],
+        ]
+      }
+    ]
   },
   nsis: {
     oneClick: false,
     perMachine: false,
     allowToChangeInstallationDirectory: true,
-    deleteAppDataOnUninstall: false,
+    deleteAppDataOnUninstall: false
   },
   linux: {
-    icon: "public/icons/icon.svg",
+    icon: "public/icons/music256x256.png",
     target: [
       "AppImage"
     ],
-    artifactName: "${productName}-Linux-${version}.${ext}",
-  },
+    artifactName: "${productName}-Linux-${version}.${ext}"
+  }
 }

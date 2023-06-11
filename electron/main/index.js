@@ -15,105 +15,110 @@ import {listen} from "../listen/listen";
 
 
 if (!app.requestSingleInstanceLock()) {
-    app.quit()
-    process.exit(0)
+  app.quit()
+  process.exit(0)
 }
 
 // Install `react-devtools`
 if (app.isPackaged === false) {
-    app.whenReady().then(() => {
-        const {default: installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
+  app.whenReady().then(() => {
+    const {default: installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
 
-        installExtension(REACT_DEVELOPER_TOOLS)
-            .then(() => {
-            })
-            .catch(err => {
-                console.error('Unable to install `react-devtools`: \n', err)
-            })
-    })
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then(() => {
+      })
+      .catch(err => {
+        console.error('Unable to install `react-devtools`: \n', err)
+      })
+  })
 }
 
 function createWindow() {
-    /**
-     * Initial window options
-     */
-    mainWindow = new BrowserWindow({
-        height: 618,
-        width: 1000,
-        maximizable: false,
-        fullscreen: false,
-        title: '',
-        icon: join(process.env.PUBLIC, '/icons/icon.ico'),
-        webPreferences: {
-            preload,
-            webviewTag: true,
-            nodeIntegration: true,
-            enableRemoteModule: true,
-            contextIsolation: false,
-            nodeIntegrationInSubFrames: true
-        }
-    })
-    loadFile();
+  /**
+   * Initial window options
+   */
+  mainWindow = new BrowserWindow({
+    height: 618,
+    width: 1000,
+    maximizable: false,
+    fullscreen: false,
+    title: '',
+    icon: [
+      join(process.env.PUBLIC, 'icons/music.png'),
+      join(process.env.PUBLIC, 'icons/music64x64.png'),
+      join(process.env.PUBLIC, 'icons/music128x128.png'),
+      join(process.env.PUBLIC, 'icons/icon256x256.png'),
+    ],
+    webPreferences: {
+      preload,
+      webviewTag: true,
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+      nodeIntegrationInSubFrames: true
+    }
+  })
+  loadFile();
 }
 
 function loadFile() {
-    if (app.isPackaged) {
-        mainWindow.loadFile(indexHtml)
-        // add shortcut for open devtools (F12 or Ctrl+Shift+I)
-        mainWindow.webContents.on('before-input-event', (event, input) => {
-            if ((input.key.toLowerCase() === 'f12') || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
-                mainWindow.webContents.openDevTools()
-                event.preventDefault()
-            }
-        })
-    } else {
-        mainWindow.loadURL(url)
-        // add shortcut for open devtools (F12 or Ctrl+Shift+I)
-        mainWindow.webContents.on('before-input-event', (event, input) => {
-            if ((input.key.toLowerCase() === 'f12') || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
-                mainWindow.webContents.openDevTools()
-                event.preventDefault()
-            }
-        })
-    }
-    mainWindow.on('closed', () => {
-        mainWindow = null
+  if (app.isPackaged) {
+    mainWindow.loadFile(indexHtml)
+    // add shortcut for open devtools (F12 or Ctrl+Shift+I)
+    mainWindow.webContents.on('before-input-event', (event, input) => {
+      if ((input.key.toLowerCase() === 'f12') || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
+        mainWindow.webContents.openDevTools()
+        event.preventDefault()
+      }
     })
+  } else {
+    mainWindow.loadURL(url)
+    // add shortcut for open devtools (F12 or Ctrl+Shift+I)
+    mainWindow.webContents.on('before-input-event', (event, input) => {
+      if ((input.key.toLowerCase() === 'f12') || (input.control && input.shift && input.key.toLowerCase() === 'i')) {
+        mainWindow.webContents.openDevTools()
+        event.preventDefault()
+      }
+    })
+  }
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 }
 
 
 app.whenReady().then(() => {
-    createWindow()
+  createWindow()
 
-    //
-    const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/dog.jpg'))
-    let tray = new Tray(icon)
-    const contextMenu = Menu.buildFromTemplate([
-        {label: '播放', type: 'radio'},
-        {label: '上一首', type: 'radio'},
-        {label: '下一首', type: 'radio', checked: true},
-        {label: '退出', type: 'radio'}
-    ])
+  //
+  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/dog.jpg'))
+  let tray = new Tray(icon)
+  const contextMenu = Menu.buildFromTemplate([
+    {label: '播放', type: 'radio'},
+    {label: '上一首', type: 'radio'},
+    {label: '下一首', type: 'radio', checked: true},
+    {label: '退出', type: 'radio'}
+  ])
 
-    tray.setContextMenu(contextMenu)
-    tray.setToolTip('This is my application')
-    tray.setTitle('This is my title')
+  tray.setContextMenu(contextMenu)
+  tray.setToolTip('This is my application')
+  tray.setTitle('This is my title')
 })
 
 app.on('browser-window-created', function (e, window) {
-    window.setMenu(null);
+  window.setMenu(null);
 });
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
 
 app.on('activate', () => {
-    if (mainWindow === null) {
-        createWindow()
-    }
+  if (mainWindow === null) {
+    createWindow()
+  }
 })
 
 listen()
