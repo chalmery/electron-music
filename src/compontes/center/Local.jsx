@@ -17,10 +17,6 @@ export default function Local() {
 
     const [dirList, setDirList] = useState([]);
     const [dataSource, setDataSource] = useState([]);
-    const containerStyle = {
-        height: `calc(100vh - var(--header-height))`,
-    };
-
 
     useEffect(() => {
         //查数据
@@ -47,31 +43,30 @@ export default function Local() {
 
     return (
         <Layout className='layout'>
-            <Sider className='scrollable-container' style={{overflow: 'auto'}}>
+            <Sider className='scrollable-container auto'>
                 {dirList.length > 0 && (
-                    <Menu
-                        style={{border: 0}}
-                        theme="light"
-                        mode="inline"
-                        items={dirList}
-                        onClick={handleMenuClick}
-                    >
-                    </Menu>
+                  <Menu
+                    className='border0'
+                    theme="light"
+                    mode="inline"
+                    items={dirList}
+                    onClick={handleMenuClick}
+                  >
+                  </Menu>
                 )}
             </Sider>
 
-            <Content className='scrollable-container' style={{overflow: 'auto', height: "100vh"}}>
+            <Content className='scrollable-container auto heightMax'>
                 {dataSource.length > 0 && (<>
-                        <Table
-
-                            onRow={(record) => {
-                                return {
-                                    onClick: (event) => {
-                                        eventManager.publish('myEvent', record);
-                                    }
-                                };
-                            }}
-                            bordered={true}
+                      <Table
+                        onRow={(record) => {
+                            return {
+                                onClick: (event) => {
+                                    eventManager.publish('myEvent', record);
+                                }
+                            };
+                        }}
+                        bordered={true}
                             size={"small"}
                             columns={columns}
                             pagination={false}

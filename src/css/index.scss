@@ -50,11 +50,15 @@ code {
 }
 
 .footer {
-  flex-shrink: 0;
+  flex-shrink: 0
 }
 
 .p0 {
-  padding: 0;
+  padding: 0
+}
+
+.border0 {
+  border: 0
 }
 
 :where(.css-dev-only-do-not-override-12jzuas).ant-layout .ant-layout-sider {
@@ -75,6 +79,6 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   background-color: transparent;
 }
 
-:root {
-  --header-height: 54px;
+.auto {
+  overflow: auto
 }

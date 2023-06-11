@@ -3,6 +3,7 @@ import localSetting from "../../lib/event";
 import {readdirSync, statSync} from "fs";
 import {save} from "../../lib/fs";
 import dataName from "../../lib/dataName";
+import path from "path";
 
 const {parseFile} = require('music-metadata');
 
@@ -17,7 +18,7 @@ function readDir(dir, fileList) {
             return
         }
         files.forEach((file) => {
-            let filePath = dir + "/" + file
+            let filePath = path.join(dir, file)
             let info = statSync(filePath);
             if (info.isFile()) {
                 fileList.push({
@@ -79,6 +80,8 @@ function parseMetaData(fileList, callback, event) {
                     value: metadata
                 })
             }
+        }).catch((err) => {
+            console.log(err.message)
         }).finally(() => {
             mapSize -= 1
             key += 1
@@ -96,15 +99,18 @@ function parseMetaData(fileList, callback, event) {
  * @param event
  */
 function call(fileList, event) {
-    const groupedArray = fileList.reduce((acc, obj) => {
+    const groupedArray = Object.values(fileList.reduce((acc, obj) => {
         const {key, value} = obj;
         if (!acc[key]) {
-            acc[key] = {key, label: key, value: []};
+            acc[key] = {key: key, label: path.basename(key), value: []};
         }
         acc[key].value.push(value);
         return acc;
-    }, {});
-    save(dataName.META_DATA.value, JSON.stringify(Object.values(groupedArray)), () => {
+    }, {}));
+    //排序
+    groupedArray.sort((a, b) => a.label.localeCompare(b.label));
+
+    save(dataName.META_DATA.value, JSON.stringify(groupedArray), () => {
         event.reply(localSetting.SYNC_DATA_CALLBACK.value, null)
     })
 }
