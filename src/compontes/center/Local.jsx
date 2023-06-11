@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import {Avatar, Layout, Menu, Progress, Space, Table} from "antd";
+import {Layout, Menu, Table} from "antd";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
-import {UserOutlined} from '@ant-design/icons';
 
 const {Footer, Content, Sider} = Layout;
 
@@ -43,11 +42,10 @@ export default function Local() {
     }
 
     return (
-        <Layout className='layout heightMax'>
-            <Sider className='heightMax leftBg'>
+        <Layout className='layout'>
+            <Sider>
                 {dirList.length > 0 && (
                     <Menu
-                        className='centerBg'
                         style={{border: 0}}
                         theme="light"
                         mode="inline"
@@ -57,18 +55,18 @@ export default function Local() {
                     </Menu>
                 )}
             </Sider>
-            <Layout className={'rightLayout'}>
-                <Content className={'content'}>
-                    {dataSource.length > 0 && (
-                        <Table
-                            onRow={(record) => {
-                                return {
-                                    onClick: (event) => {
-                                        console.log(record)
-                                    }
-                                };
-                            }}
-                            bordered={true}
+
+            <Content>
+                {dataSource.length > 0 && (
+                    <Table
+                        onRow={(record) => {
+                            return {
+                                onClick: (event) => {
+                                    console.log(record)
+                                }
+                            };
+                        }}
+                        bordered={true}
                             size={"small"}
                             columns={columns}
                             pagination={false}
@@ -76,17 +74,8 @@ export default function Local() {
                         />
                     )}
                 </Content>
-                <Footer className={'widthMax p0 footer'}>
-                    <Space direction="horizontal" className={'widthMax'}>
-                        <Avatar shape="square" size={48} icon={<UserOutlined/>}/>
-                        <Space direction="vertical" className={'widthMax'}>
-                            <span>歌曲名称  111111111111111111111111111111</span>
-                            <span>00:00/00:00</span>
-                            <Progress size={'small'} className={'widthMax'}/>
-                        </Space>
-                    </Space>
-                </Footer>
-            </Layout>
+
+
         </Layout>
 
     )

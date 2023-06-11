@@ -1,28 +1,31 @@
-import React from 'react'
-import {Layout} from 'antd';
+import React from "react";
+
 import LeftMenu from "@/compontes/left/LeftMenu";
 import {Redirect} from "react-router-dom";
 import Local from "@/compontes/center/Local";
 import Online from "@/compontes/center/Online";
-import {CacheRoute, CacheSwitch} from 'react-router-cache-route';
+import {CacheRoute, CacheSwitch} from "react-router-cache-route";
+import {Layout} from "antd";
+import MyFooter from "@/compontes/footer/MyFooter";
 
 const {Footer, Sider, Content} = Layout;
 
 export default function Admin() {
-
-
     return (
-        <Layout className='layout '>
-            <Sider className='siderStyle'>
+        <Layout>
+            <Sider>
                 <LeftMenu/>
             </Sider>
-            <Content className="heightMax">
+            <Content style={{position: "relative", height: "100vh",}}>
                 <CacheSwitch>
-                    < Redirect from="/" exact to="/"/>
+                    <Redirect from="/" exact to="/"/>
                     <CacheRoute path="/local" component={Local}/>
                     <CacheRoute path="/online" component={Online}/>
                 </CacheSwitch>
+                <Footer style={{width: "100%", position: "absolute", bottom: 0, padding: 0, margin: 0}}>
+                    <MyFooter/>
+                </Footer>
             </Content>
         </Layout>
-    )
+    );
 }

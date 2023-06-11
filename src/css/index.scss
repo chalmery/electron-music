@@ -20,18 +20,6 @@ code {
   background: none;
 }
 
-.leftBg {
-  background-color: #FFFFFF
-}
-
-.centerBg {
-  background-color: #FAFAFA
-}
-
-.rightBg {
-  background-color: #F5F5F5
-}
-
 .heightMax {
   height: 100vh
 }
@@ -71,4 +59,11 @@ code {
 
 :where(.css-dev-only-do-not-override-12jzuas).ant-layout .ant-layout-sider {
   background-color: #FFFFFF;
+  border-right: 1px solid rgb(222, 222, 222);
+  height: 100vh;
+}
+
+main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
+  background-color: #FFFFFF;
+
 }
