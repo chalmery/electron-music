@@ -3,6 +3,7 @@ import {Layout, Menu, Table} from "antd";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
 import eventManager from '../../event/eventManager';
+import pageEvent from "@/event/pageEvent";
 
 const {Footer, Content, Sider} = Layout;
 
@@ -62,7 +63,7 @@ export default function Local() {
                         onRow={(record) => {
                             return {
                                 onClick: (event) => {
-                                    eventManager.publish('myEvent', record);
+                                    eventManager.publish(pageEvent.CLICK_MUSIC.value, record);
                                 }
                             };
                         }}

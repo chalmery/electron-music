@@ -6,14 +6,17 @@ import {
   HeartOutlined,
   LeftCircleOutlined,
   LinkOutlined,
+  PauseCircleOutlined,
   PlayCircleOutlined,
   RetweetOutlined,
-  SoundOutlined,
+  RightCircleOutlined,
+  SoundOutlined
 } from "@ant-design/icons";
 
 import dog from "/dog.jpg";
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
+import pageEvent from "@/event/pageEvent";
 
 const fs = window.fs
 
@@ -23,6 +26,8 @@ function MyFooter() {
   const [currentTime, setCurrentTime] = useState("00:00");
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
+  const [playState, setPlayState] = useState(false);
+
 
   useEffect(() => {
     const audioPlayer = audioRef.current;
@@ -34,10 +39,11 @@ function MyFooter() {
       setDuration(formatTime(duration));
       //播放音乐
       play(path)
+      setPlayState(true)
     };
 
     // 订阅事件
-    eventManager.subscribe("myEvent", handleEvent);
+    eventManager.subscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
 
 
     const updateProgress = () => {
@@ -48,12 +54,12 @@ function MyFooter() {
       setProgress(progressPercent);
     };
 
-    audioPlayer.addEventListener('timeupdate', updateProgress);
+    audioPlayer.addEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
 
     // 取消订阅
     return () => {
-      eventManager.unsubscribe("myEvent", handleEvent);
-      audioPlayer.removeEventListener('timeupdate', updateProgress);
+      eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
+      audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
     };
   }, [audioRef.current]);
 
@@ -83,13 +89,23 @@ function MyFooter() {
         }}
       >
         <LeftCircleOutlined/>
-        <PlayCircleOutlined onClick={() => {
-          audioRef.current.pause()
-        }}/>
-        <PlayCircleOutlined onClick={() => {
-          audioRef.current.play()
-        }}/>
-        {/*<RightCircleOutlined/>*/}
+        {
+          playState === true && (
+            <PauseCircleOutlined onClick={() => {
+              audioRef.current.pause()
+              setPlayState(false)
+            }}/>
+          )
+        }
+        {
+          playState === false && (
+            <PlayCircleOutlined onClick={() => {
+              audioRef.current.play()
+              setPlayState(true)
+            }}/>
+          )
+        }
+        <RightCircleOutlined/>
         <SoundOutlined/>
         <RetweetOutlined/>
       </span>
