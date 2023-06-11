@@ -111,13 +111,17 @@ function call(fileList, event) {
     groupedArray.sort((a, b) => a.label.localeCompare(b.label));
 
     save(dataName.META_DATA.value, JSON.stringify(groupedArray), () => {
-        event.reply(localSetting.SYNC_DATA_CALLBACK.value, null)
+        event.reply(localSetting.SYNC_DATA_CALLBACK.value, localSetting.SYNC_DATA_CALLBACK.value)
     })
 }
 
 //同步数据
 const dataSyncAction = () => {
     ipcMain.on(localSetting.SYNC_DATA.value, (event, data) => {
+        if (data === undefined || data === null) {
+            event.reply(localSetting.SYNC_DATA_CALLBACK.value, null)
+            return
+        }
         //找这些目录的音乐
         let fileList = batchReadDir(data)
         // //解析元数据,存储
