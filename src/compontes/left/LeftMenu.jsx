@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Divider, Image, Menu, Modal} from 'antd';
-import {CloudOutlined, CustomerServiceTwoTone} from '@ant-design/icons';
+import {CloudOutlined, CustomerServiceTwoTone, FireOutlined, HeartOutlined} from '@ant-design/icons';
 import Settings from "@/compontes/settings/Settings";
 import {withRouter} from "react-router-dom";
 import dog from '/dog.jpg';
@@ -19,7 +19,12 @@ const items = [
   {
     label: "播放列表",
     key: "/playlist",
-    icon: <CloudOutlined/>,
+    icon: <FireOutlined/>,
+  },
+  {
+    label: "我喜欢的",
+    key: "/love",
+    icon: <HeartOutlined/>,
   }
 ];
 

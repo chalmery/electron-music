@@ -8,6 +8,7 @@ import {CacheRoute, CacheSwitch} from "react-router-cache-route";
 import {Layout} from "antd";
 import MyFooter from "@/compontes/footer/MyFooter";
 import Playlist from "@/compontes/center/Playlist";
+import Love from "@/compontes/center/Love";
 
 const {Footer, Sider, Content} = Layout;
 
@@ -23,6 +24,7 @@ export default function Admin() {
           <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
           <CacheRoute path="/online" component={Online}/>
           <CacheRoute path="/playlist" component={Playlist}/>
+          <CacheRoute path="/love" component={Love}/>
         </CacheSwitch>
         <Footer style={{width: "100%", position: "absolute", bottom: 0, padding: 0, margin: 0,}}>
           <MyFooter/>

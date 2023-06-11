@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Progress} from "antd";
+import {Popover, Progress, Slider} from "antd";
 import {
   AlignCenterOutlined,
   FontColorsOutlined,
@@ -27,10 +27,11 @@ function MyFooter() {
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
   const [playState, setPlayState] = useState(false);
-
+  const [volume, setVolume] = useState(100);
 
   useEffect(() => {
     const audioPlayer = audioRef.current;
+
 
     const handleEvent = (data) => {
       // 处理事件
@@ -76,6 +77,15 @@ function MyFooter() {
     });
   }
 
+  const handleVolumeChange = (value) => {
+    setVolume(value)
+    audioRef.current.volume = value / 100
+  };
+
+  const popoverContent = (
+    <Slider vertical style={{height: '80px'}} value={volume} onChange={handleVolumeChange}/>
+  );
+
   return (
     <div style={{width: "100%", display: "inline-flex"}}>
       <span
@@ -106,7 +116,12 @@ function MyFooter() {
           )
         }
         <RightCircleOutlined/>
-        <SoundOutlined/>
+          <Popover
+            content={popoverContent}
+            trigger="click"
+          >
+          <SoundOutlined/>
+        </Popover>
         <RetweetOutlined/>
       </span>
       <span style={{flexGrow: 1, display: "inline-flex"}}>

@@ -51,7 +51,7 @@ export default function LocalConf() {
 
 
   return (
-    <Space direction="vertical" className={'widthMax'}>
+    <Space direction="vertical" className='widthMax'>
       <Space direction="horizontal">
         <Button type="primary" onClick={openDirSelect}>选择目录</Button>
         <Button loading={loading}
