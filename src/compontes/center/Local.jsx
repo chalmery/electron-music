@@ -1,34 +1,22 @@
 import React, {useEffect, useState} from 'react'
-import {Layout, Menu, Table} from "antd";
-import Sider from "antd/es/layout/Sider";
-import {Content} from "antd/es/layout/layout";
+import {Avatar, Layout, Menu, Progress, Space, Table} from "antd";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
+import {UserOutlined} from '@ant-design/icons';
 
-const MenuItem = Menu.Item;
+const {Footer, Content, Sider} = Layout;
 
 
 export default function Local() {
-
-
-    const dirColumn = [{title: 'dir', dataIndex: 'dir', key: 'dir'}];
-
     const columns = [
-        {"title": "名称", "dataIndex": "title", "key": "title"},
-        {"title": "作者", "dataIndex": "artist", "key": "artist"},
+        {"title": "歌曲", "dataIndex": "title", "key": "title"},
+        {"title": "歌手", "dataIndex": "artist", "key": "artist"},
         {"title": "专辑", "dataIndex": "album", "key": "album"},
         {"title": "类型", "dataIndex": "type", "key": "type"}
     ];
 
     const [dirList, setDirList] = useState([]);
     const [dataSource, setDataSource] = useState([]);
-
-    const menuClick = (item, key, keyPath, domEvent) => {
-        console.log(item)
-        console.log(key)
-        console.log(keyPath)
-        console.log(domEvent)
-    };
 
 
     useEffect(() => {
@@ -50,40 +38,29 @@ export default function Local() {
         const selectedItem = dirList.find((item) => item.key === key);
         if (selectedItem) {
             const {value} = selectedItem;
-            console.log('Clicked item value:', value);
-            // 在这里处理菜单项点击事件，可以获取当前行对应的 value 值
+            setDataSource(value)
         }
-    };
-
-    const renderMenuItems = () => {
-        return dirList.map((item) => (
-            <MenuItem key={item.key}>{item.label}</MenuItem>
-        ));
-    };
-
-    const menuItems = renderMenuItems();
+    }
 
     return (
-        <Layout className='layout centerBg'>
-            <Sider className='heightMax centerBg'>
+        <Layout className='layout heightMax'>
+            <Sider className='heightMax leftBg'>
                 {dirList.length > 0 && (
                     <Menu
                         className='centerBg'
                         style={{border: 0}}
                         theme="light"
                         mode="inline"
+                        items={dirList}
                         onClick={handleMenuClick}
                     >
-                        {menuItems}
                     </Menu>
-
                 )}
             </Sider>
-            <Layout className='rightBg'>
-                <Content className='contentStyle'>
+            <Layout className={'rightLayout'}>
+                <Content className={'content'}>
                     {dataSource.length > 0 && (
                         <Table
-                            rowClassName='rightBg p0'
                             onRow={(record) => {
                                 return {
                                     onClick: (event) => {
@@ -91,6 +68,7 @@ export default function Local() {
                                     }
                                 };
                             }}
+                            bordered={true}
                             size={"small"}
                             columns={columns}
                             pagination={false}
@@ -98,6 +76,16 @@ export default function Local() {
                         />
                     )}
                 </Content>
+                <Footer className={'widthMax p0 footer'}>
+                    <Space direction="horizontal" className={'widthMax'}>
+                        <Avatar shape="square" size={48} icon={<UserOutlined/>}/>
+                        <Space direction="vertical" className={'widthMax'}>
+                            <span>歌曲名称  111111111111111111111111111111</span>
+                            <span>00:00/00:00</span>
+                            <Progress size={'small'} className={'widthMax'}/>
+                        </Space>
+                    </Space>
+                </Footer>
             </Layout>
         </Layout>
 

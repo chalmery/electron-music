@@ -12,24 +12,17 @@ export default function Admin() {
 
 
     return (
-        <Layout className='layout'>
+        <Layout className='layout '>
             <Sider className='siderStyle'>
                 <LeftMenu/>
             </Sider>
-            <Layout>
-                <Content className='contentStyle'>
-                    {/*<Switch>*/}
-                    <CacheSwitch>
-                        < Redirect from="/" exact to="/"/>
-                        <CacheRoute path="/local" component={Local}/>
-                        <CacheRoute path="/online" component={Online}/>
-                    </CacheSwitch>
-                    {/*< Redirect from="/" exact to="/"/>*/}
-                    {/*<Route path="/local" component={Local} />*/}
-                    {/*<Route path="/online" component={Online} />*/}
-                    {/*</Switch>*/}
-                </Content>
-            </Layout>
+            <Content className="heightMax">
+                <CacheSwitch>
+                    < Redirect from="/" exact to="/"/>
+                    <CacheRoute path="/local" component={Local}/>
+                    <CacheRoute path="/online" component={Online}/>
+                </CacheSwitch>
+            </Content>
         </Layout>
     )
 }

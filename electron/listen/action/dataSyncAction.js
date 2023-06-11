@@ -54,13 +54,15 @@ function batchReadDir(dirs) {
  * @param event electron 事件
  */
 function parseMetaData(fileList, callback, event) {
-    let metaList = [];
-    let mapSize = fileList.length;
+    let metaList = []
+    let mapSize = fileList.length
+    let key = 1
     fileList.forEach((value) => {
         let promise = parseFile(value.filePath)
         promise.then((data) => {
             if (data !== null && data !== undefined && fileTypeList.includes(data.format.container)) {
                 let metadata = {
+                    key: key,
                     title: data.common.title,
                     artist: data.common.artist,
                     album: data.common.album,
@@ -76,10 +78,10 @@ function parseMetaData(fileList, callback, event) {
                     key: value.dir,
                     value: metadata
                 })
-
             }
         }).finally(() => {
             mapSize -= 1
+            key += 1
             if (mapSize === 0) {
                 callback(metaList, event)
             }
