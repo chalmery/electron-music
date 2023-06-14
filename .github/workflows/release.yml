@@ -24,3 +24,21 @@ jobs:
         run: npm run build
         env:
           GH_TOKEN: ${{ secrets.actions }}
+      # step5: 清理
+      - name: cleanup artifacts
+        run: |
+          npx rimraf "release/!(*.AppImage|*.tar.gz)"
+      # step6: 上传
+      - name: upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}
+          path: release
+      # step7: 清理
+      - name: release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: "release/**"
+        env:
+          GITHUB_TOKEN: ${{ secrets.actions }}
