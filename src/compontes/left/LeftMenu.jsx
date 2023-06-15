@@ -3,7 +3,7 @@ import {Divider, Image, Menu, Modal} from 'antd';
 import {CloudOutlined, CustomerServiceTwoTone, FireOutlined, HeartOutlined} from '@ant-design/icons';
 import Settings from "@/compontes/settings/Settings";
 import {withRouter} from "react-router-dom";
-import dog from '/dog.jpg';
+import icon from '/icons/music256x256.png';
 
 const items = [
   {
@@ -46,7 +46,7 @@ const LeftMenu = (props) => {
           onClick={() => {
             setOpen(true)
           }}
-          src={dog}
+          src={icon}
           preview={false}
         />
       </div>

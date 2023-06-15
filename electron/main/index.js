@@ -45,7 +45,7 @@ function createWindow() {
     title: '',
     icon: [
       join(process.env.PUBLIC, 'icons/music.png'),
-      join(process.env.PUBLIC, 'icons/music64x64.png'),
+      join(process.env.PUBLIC, 'icons/music@3x.png'),
       join(process.env.PUBLIC, 'icons/music128x128.png'),
       join(process.env.PUBLIC, 'icons/icon256x256.png'),
     ],
@@ -91,7 +91,7 @@ app.whenReady().then(() => {
   createWindow()
 
   //
-  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/dog.jpg'))
+  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/icons/music.png'))
   let tray = new Tray(icon)
   const contextMenu = Menu.buildFromTemplate([
     {label: '播放', type: 'radio'},

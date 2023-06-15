@@ -11,6 +11,10 @@ let localSetting = {
     LOCAL: {label: "本地音乐", value: "local"},
     LOCAL_CALLBACK: {label: "本地音乐回调", value: "localCallback"},
 
+    //音乐图片加载
+    PICTURE: {label: "音乐图片加载", value: "picture"},
+    PICTURE_CALLBACK: {label: "音乐图片加载回调", value: "pictureCallback"},
+
 
 }
 

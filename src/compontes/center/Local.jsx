@@ -5,7 +5,7 @@ import localSetting from "../../../electron/lib/event";
 import eventManager from '../../event/eventManager';
 import pageEvent from "@/event/pageEvent";
 
-const {Footer, Content, Sider} = Layout;
+const {Content, Sider} = Layout;
 
 
 export default function Local() {

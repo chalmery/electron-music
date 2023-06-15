@@ -13,21 +13,32 @@ import {
   SoundOutlined
 } from "@ant-design/icons";
 
-import dog from "/dog.jpg";
+import icon from '/icons/music256x256.png';
+
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
+import localSetting from "../../../electron/lib/event";
 
 const fs = window.fs
 
 function MyFooter() {
+  //标题
   const [title, setTitle] = useState("听你想听的歌");
+  //当前时间
   const [duration, setDuration] = useState("00:00");
+  //总时间
   const [currentTime, setCurrentTime] = useState("00:00");
+  // 进度条
   const [progress, setProgress] = useState(0);
+  // audio对象
   const audioRef = useRef(null);
+  //播放状态
   const [playState, setPlayState] = useState(false);
+  //音量
   const [volume, setVolume] = useState(100);
+  //专辑图像
+  const [picture, setPicture] = useState(icon);
 
   useEffect(() => {
     const audioPlayer = audioRef.current;
@@ -42,6 +53,12 @@ function MyFooter() {
       play(path)
       setPlayState(true)
     };
+
+    //回调
+    electron.ipcRenderer.on(localSetting.PICTURE_CALLBACK.value, (event, data) => {
+      console.log(data)
+      setPicture(data)
+    });
 
     // 订阅事件
     eventManager.subscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
@@ -59,9 +76,11 @@ function MyFooter() {
 
     // 取消订阅
     return () => {
+      electron.ipcRenderer.removeAllListeners(localSetting.PICTURE_CALLBACK.value);
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
     };
+
   }, [audioRef.current]);
 
 
@@ -87,7 +106,7 @@ function MyFooter() {
   );
 
   return (
-    <div style={{width: "100%", display: "inline-flex"}}>
+    <div style={{height: '55px', width: "100%", display: "inline-flex"}}>
       <span
         style={{
           float: "left",
@@ -126,7 +145,7 @@ function MyFooter() {
       </span>
       <span style={{flexGrow: 1, display: "inline-flex"}}>
         <div style={{position: "relative"}}>
-          <img width={"50px"} src={dog}/>
+          <img width={"45px"} src={picture} alt={icon}/>
         </div>
         <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>
           <span>{title}</span>
