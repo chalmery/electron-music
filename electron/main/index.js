@@ -52,6 +52,7 @@ function createWindow() {
     webPreferences: {
       preload,
       webviewTag: true,
+      webSecurity: false, // 禁用安全策略
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,

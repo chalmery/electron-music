@@ -1,9 +1,11 @@
 import {ipcMain} from "electron";
 import localSetting from "../../lib/event";
-import {readdirSync, statSync} from "fs";
+import {access, readdirSync, statSync, writeFile} from "fs";
 import {save} from "../../lib/fs";
 import dataName from "../../lib/dataName";
 import path from "path";
+import crypto from "crypto";
+import mime from "mime-types";
 
 const {parseFile} = require('music-metadata');
 
@@ -72,9 +74,25 @@ function parseMetaData(fileList, callback, event) {
                     duration: data.format.duration,
                     type: data.format.container
                 }
-                // if (data.common.picture !== undefined && data.common.picture.length !== 0) {
-                //     metadata.picture = data.common.picture[0].data
-                // }
+                if (data.common.picture !== undefined && data.common.picture.length !== 0) {
+                    //存储二进制图片
+                    let picture = data.common.picture[0].data
+                    //获取文件后缀
+                    let imageMimeType = data.common.picture[0].format
+                    let format = mime.extension(imageMimeType)
+
+                    let hashCode = crypto.createHash('md5').update(value.filePath).digest('hex')
+                    let picturePath = path.join(__dirname, '../' + hashCode + '.' + format)
+                    metadata.picture = picturePath
+
+                    //文件不存在则写入
+                    access(picturePath, (err) => {
+                        if (err) {
+                            writeFile(picturePath, picture, (err) => {
+                            })
+                        }
+                    })
+                }
                 metaList.push({
                     key: value.dir,
                     value: metadata

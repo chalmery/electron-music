@@ -18,7 +18,6 @@ import icon from '/icons/music256x256.png';
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
-import localSetting from "../../../electron/lib/event";
 
 const fs = window.fs
 
@@ -46,19 +45,20 @@ function MyFooter() {
 
     const handleEvent = (data) => {
       // 处理事件
-      let {title, artist, album, type, path, duration} = data;
+      let {title, picture, path, duration} = data;
+      //设置属性
       setTitle(title);
       setDuration(formatTime(duration));
+      if (picture) {
+        console.log(picture)
+        const fileUrl = `file://${picture}`;
+        setPicture(fileUrl)
+      }
       //播放音乐
       play(path)
       setPlayState(true)
     };
 
-    //回调
-    electron.ipcRenderer.on(localSetting.PICTURE_CALLBACK.value, (event, data) => {
-      console.log(data)
-      setPicture(data)
-    });
 
     // 订阅事件
     eventManager.subscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
@@ -76,7 +76,6 @@ function MyFooter() {
 
     // 取消订阅
     return () => {
-      electron.ipcRenderer.removeAllListeners(localSetting.PICTURE_CALLBACK.value);
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
     };
@@ -143,9 +142,10 @@ function MyFooter() {
         </Popover>
         <RetweetOutlined/>
       </span>
-      <span style={{flexGrow: 1, display: "inline-flex"}}>
-        <div style={{position: "relative"}}>
-          <img width={"45px"} src={picture} alt={icon}/>
+
+      <span style={{flexGrow: 1, display: "inline-flex", padding: '5px'}}>
+        <div className='imgCenter' style={{width: "45px", textAlign: "center"}}>
+          <img width={"100%"} src={picture} alt={icon} style={{borderRadius: "2px"}}/>
         </div>
         <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>
           <span>{title}</span>
