@@ -28,7 +28,12 @@ export default function Local() {
             setDirList(data)
         });
 
+        //下一首
+        eventManager.subscribe(pageEvent.NEXT.value, handleNext);
+
+        // 取消订阅
         return () => {
+            eventManager.unsubscribe(pageEvent.NEXT.value, handleNext);
             electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
         };
 
@@ -42,15 +47,23 @@ export default function Local() {
         }
     }
 
+    /**
+     * 下一首事件处理
+     * @param data 当前音乐元数据
+     */
+    const handleNext = (data) => {
+
+    }
+
     return (
-        <Layout className='layout'>
-            <Sider className='scrollable-container auto'>
-                {dirList.length > 0 && (
-                  <Menu
-                    className='border0'
-                    theme="light"
-                    mode="inline"
-                    items={dirList}
+      <Layout className='layout'>
+          <Sider className='scrollable-container auto'>
+              {dirList.length > 0 && (
+                <Menu
+                  className='border0'
+                  theme="light"
+                  mode="inline"
+                  items={dirList}
                     onClick={handleMenuClick}
                   >
                   </Menu>
