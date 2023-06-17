@@ -1,25 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Popover, Progress, Slider} from "antd";
-import {
-  AlignCenterOutlined,
-  FontColorsOutlined,
-  HeartOutlined,
-  LeftCircleOutlined,
-  LinkOutlined,
-  PauseCircleOutlined,
-  PlayCircleOutlined,
-  RetweetOutlined,
-  RightCircleOutlined,
-  SoundOutlined
-} from "@ant-design/icons";
-
 import icon from '/icons/music256x256.png';
-
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
+import {FavoriteBorder, Pause, PlayArrow, Repeat, SkipNext, SkipPrevious, VolumeUp} from '@mui/icons-material';
 
 const fs = window.fs
+
 
 function MyFooter() {
   //标题
@@ -70,6 +58,10 @@ function MyFooter() {
       const progressPercent = (currentTime / duration) * 100;
       setCurrentTime(formatTime(currentTime))
       setProgress(progressPercent);
+      //播放完毕，根据播放类型决定如何继续
+      if (currentTime === duration) {
+
+      }
     };
 
     audioPlayer.addEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
@@ -106,20 +98,23 @@ function MyFooter() {
 
   return (
     <div style={{height: '55px', width: "100%", display: "inline-flex"}}>
+      {/*左侧播放按钮栏*/}
       <span
         style={{
           float: "left",
           width: "200px",
           display: "inline-flex",
           padding: "0 10px 0 10px",
+          alignItems: 'center',
           justifyContent: "space-between",
           borderRight: "1px solid rgb(222, 222, 222)",
         }}
       >
-        <LeftCircleOutlined/>
+       <SkipPrevious/>
+
         {
           playState === true && (
-            <PauseCircleOutlined onClick={() => {
+            <Pause onClick={() => {
               audioRef.current.pause()
               setPlayState(false)
             }}/>
@@ -127,20 +122,22 @@ function MyFooter() {
         }
         {
           playState === false && (
-            <PlayCircleOutlined onClick={() => {
+            <PlayArrow onClick={() => {
               audioRef.current.play()
               setPlayState(true)
             }}/>
           )
         }
-        <RightCircleOutlined/>
+        <SkipNext/>
           <Popover
             content={popoverContent}
             trigger="click"
           >
-          <SoundOutlined/>
+          <VolumeUp/>
         </Popover>
-        <RetweetOutlined/>
+        <Repeat/>
+        <FavoriteBorder/>
+
       </span>
 
       <span style={{flexGrow: 1, display: "inline-flex", padding: '5px'}}>
@@ -152,23 +149,7 @@ function MyFooter() {
           <span style={{float: "right"}}>{currentTime}/{duration}</span>
           <Progress percent={progress} size={"small"} className={"widthMax"} showInfo={false}/>
         </span>
-      </span>
-      <span
-        style={{
-          padding: "0 5px 0 5px",
-          float: "right",
-          width: "192px",
-          display: "inline-flex",
-          //   padding: "0 5% 0 5%",
-          justifyContent: "space-between",
-          flexBasis: "100px",
-          borderLeft: "1px solid rgb(222, 222, 222)",
-        }}
-      >
-        <FontColorsOutlined/>
-        <HeartOutlined/>
-        <LinkOutlined/>
-        <AlignCenterOutlined/>
+
       <audio ref={audioRef} id="audioPlayer"></audio>
       </span>
     </div>

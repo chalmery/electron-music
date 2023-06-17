@@ -1,30 +1,32 @@
 import React, {useState} from 'react'
 import {Divider, Image, Menu, Modal} from 'antd';
-import {CloudOutlined, CustomerServiceTwoTone, FireOutlined, HeartOutlined} from '@ant-design/icons';
 import Settings from "@/compontes/settings/Settings";
 import {withRouter} from "react-router-dom";
 import icon from '/icons/music256x256.png';
+
+import {CloudQueue, FavoriteBorder, Headset, LibraryMusic} from '@mui/icons-material';
+
 
 const items = [
   {
     label: "本地音乐",
     key: "/local",
-    icon: <CustomerServiceTwoTone/>,
+    icon: <LibraryMusic/>,
   },
   {
     label: "在线歌单",
     key: "/online",
-    icon: <CloudOutlined/>,
+    icon: <CloudQueue/>,
   },
   {
     label: "播放列表",
     key: "/playlist",
-    icon: <FireOutlined/>,
+    icon: <Headset/>,
   },
   {
     label: "我喜欢的",
     key: "/love",
-    icon: <HeartOutlined/>,
+    icon: <FavoriteBorder/>,
   }
 ];
 
