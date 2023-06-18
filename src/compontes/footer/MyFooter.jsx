@@ -17,15 +17,11 @@ import {
   VolumeOff,
   VolumeUp
 } from '@mui/icons-material';
+import PlayMode from "@/enums/playMode";
 
 const fs = window.fs
 
 //播放模式枚举
-const PlayMode = {
-  SINGLE_LOOP: '单曲循环',
-  LIST_LOOP: '列表循环',
-  RANDOM: '随机播放',
-};
 const IconMap = {
   '单曲循环': <RepeatOne/>,
   '列表循环': <Repeat/>,
@@ -90,7 +86,7 @@ function MyFooter() {
       setProgress(progressPercent);
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
-        eventManager.publish(pageEvent.NEXT.value, metadata);
+        eventManager.publish(pageEvent.NEXT.value, {playMode, metadata});
       }
     };
 
@@ -175,7 +171,9 @@ function MyFooter() {
         ) : (
           <PlayArrow onClick={handlePlayPauseClick}/>
         )}
-        <SkipNext/>
+        <SkipNext onClick={() => {
+          eventManager.publish(pageEvent.NEXT.value, {playMode, metadata});
+        }}/>
           <Popover
             content={popoverContent}
             trigger="click"

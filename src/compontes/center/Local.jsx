@@ -4,6 +4,7 @@ import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
 import eventManager from '../../event/eventManager';
 import pageEvent from "@/event/pageEvent";
+import playModeRepository from "@/strategy/repository/playModeRepository";
 
 const {Content, Sider} = Layout;
 
@@ -52,7 +53,10 @@ export default function Local() {
      * @param data 当前音乐元数据
      */
     const handleNext = (data) => {
-
+        //策略
+        let {playMode, metadata} = data;
+        let fun = playModeRepository.get(playMode);
+        fun(metadata);
     }
 
     return (
