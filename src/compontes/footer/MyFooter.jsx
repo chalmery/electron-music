@@ -138,7 +138,6 @@ function MyFooter() {
   };
 
   const handlePlayMode = () => {
-    console.log(playMode)
     if (playMode === PlayMode.LIST_LOOP) {
       setPlayMode(PlayMode.SINGLE_LOOP)
     }
