@@ -69,6 +69,7 @@ function parseMetaData(fileList, callback, event) {
                     title: data.common.title,
                     artist: data.common.artist,
                     album: data.common.album,
+                    parentPath: value.dir,
                     picture: null,
                     path: value.filePath,
                     duration: data.format.duration,

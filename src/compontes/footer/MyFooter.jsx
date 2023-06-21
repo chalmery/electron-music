@@ -4,6 +4,7 @@ import icon from '/icons/music256x256.png';
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
+import {listType, playModeEnum} from "@/enums/enums";
 import {
   Favorite,
   FavoriteBorder,
@@ -17,7 +18,6 @@ import {
   VolumeOff,
   VolumeUp
 } from '@mui/icons-material';
-import PlayMode from "@/enums/playMode";
 
 const fs = window.fs
 
@@ -51,7 +51,7 @@ function MyFooter() {
   //是否喜欢
   const [favorite, setFavorite] = useState(false);
   //播放模式
-  const [playMode, setPlayMode] = useState(PlayMode.LIST_LOOP);
+  const [playMode, setPlayMode] = useState(playModeEnum.LIST_LOOP);
 
 
   useEffect(() => {
@@ -86,7 +86,7 @@ function MyFooter() {
       setProgress(progressPercent);
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
-        eventManager.publish(pageEvent.NEXT.value, {playMode, metadata});
+        eventManager.publish(pageEvent.NEXT.value, {playMode, listType: listType.LocalListLoop, metadata});
       }
     };
 
@@ -138,14 +138,14 @@ function MyFooter() {
   };
 
   const handlePlayMode = () => {
-    if (playMode === PlayMode.LIST_LOOP) {
-      setPlayMode(PlayMode.SINGLE_LOOP)
+    if (playMode === playModeEnum.LIST_LOOP) {
+      setPlayMode(playModeEnum.SINGLE_LOOP)
     }
-    if (playMode === PlayMode.SINGLE_LOOP) {
-      setPlayMode(PlayMode.RANDOM)
+    if (playMode === playModeEnum.SINGLE_LOOP) {
+      setPlayMode(playModeEnum.RANDOM)
     }
-    if (playMode === PlayMode.RANDOM) {
-      setPlayMode(PlayMode.LIST_LOOP)
+    if (playMode === playModeEnum.RANDOM) {
+      setPlayMode(playModeEnum.LIST_LOOP)
     }
   }
 
@@ -171,7 +171,7 @@ function MyFooter() {
           <PlayArrow onClick={handlePlayPauseClick}/>
         )}
         <SkipNext onClick={() => {
-          eventManager.publish(pageEvent.NEXT.value, {playMode, metadata});
+          eventManager.publish(pageEvent.NEXT.value, {playMode, listType: listType.LocalListLoop, metadata});
         }}/>
           <Popover
             content={popoverContent}

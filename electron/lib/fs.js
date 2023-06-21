@@ -5,7 +5,6 @@ const fs = require("fs")
 //固定文件存储位置
 function getPath(fileName) {
     let filePath = path.join(__dirname, '../' + fileName + '.json')
-    console.log("path " + filePath)
     return filePath
 }
 
@@ -36,7 +35,6 @@ function save(fileName, data, callback) {
 
 //同步存储文件
 function saveSync(fileName, data) {
-    console.log("data " + data)
     fs.writeFileSync(getPath(fileName), data, (err) => {
         if (err) {
             console.log("save error " + err)

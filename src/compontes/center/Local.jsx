@@ -4,7 +4,7 @@ import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
 import eventManager from '../../event/eventManager';
 import pageEvent from "@/event/pageEvent";
-import playModeRepository from "@/strategy/repository/playModeRepository";
+import {playModeRepository} from "@/strategy/repository/repository";
 
 const {Content, Sider} = Layout;
 
@@ -29,16 +29,22 @@ export default function Local() {
             setDirList(data)
         });
 
+        // 取消订阅
+        return () => {
+            electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
+        };
+
+    }, []);
+
+    useEffect(() => {
         //下一首
         eventManager.subscribe(pageEvent.NEXT.value, handleNext);
 
         // 取消订阅
         return () => {
             eventManager.unsubscribe(pageEvent.NEXT.value, handleNext);
-            electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
         };
-
-    }, []);
+    }, [dirList]);
 
     const handleMenuClick = ({key}) => {
         const selectedItem = dirList.find((item) => item.key === key);
@@ -54,9 +60,13 @@ export default function Local() {
      */
     const handleNext = (data) => {
         //策略
-        let {playMode, metadata} = data;
+        let {playMode} = data;
         let fun = playModeRepository.get(playMode);
-        fun(metadata);
+        const newData = {
+            ...data,
+            dirList: dirList,
+        };
+        fun(newData);
     }
 
     return (
