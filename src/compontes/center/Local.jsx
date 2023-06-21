@@ -71,15 +71,17 @@ export default function Local() {
     return (
       <Layout className='layout'>
           <Sider className='scrollable-container auto'>
-              {dirList.length > 0 && (
-                <Menu
-                  className='border0'
-                  theme="light"
-                  mode="inline"
-                  items={dirList}
-                    onClick={handleMenuClick}
-                  >
-                  </Menu>
+              {dirList.length > 0 && (<>
+                    <Menu
+                      className='border0'
+                      theme="light"
+                      mode="inline"
+                      items={dirList}
+                      onClick={handleMenuClick}
+                    >
+                    </Menu>
+                    <div style={{height: "55px"}}></div>
+                </>
                 )}
             </Sider>
 
@@ -94,12 +96,12 @@ export default function Local() {
                             };
                         }}
                         bordered={true}
-                            size={"small"}
-                            columns={columns}
-                            pagination={false}
-                            dataSource={dataSource}
-                        />
-                        <div style={{height: "54px"}}></div>
+                        size={"small"}
+                        columns={columns}
+                        pagination={false}
+                        dataSource={dataSource}
+                      />
+                      <div style={{height: "55px"}}></div>
                     </>
                 )}
 

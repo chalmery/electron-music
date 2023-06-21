@@ -100,7 +100,8 @@ function parseMetaData(fileList, callback, event) {
                 })
             }
         }).catch((err) => {
-            console.log(err.message)
+            console.log(value);
+            console.log(err)
         }).finally(() => {
             mapSize -= 1
             key += 1
