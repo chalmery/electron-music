@@ -26,10 +26,10 @@ export default function Admin() {
           <CacheRoute path="/playlist" component={Playlist}/>
           <CacheRoute path="/love" component={Love}/>
         </CacheSwitch>
-        <Footer style={{width: "100%", position: "absolute", bottom: 0, padding: 0, margin: 0,}}>
-          <MyFooter/>
-        </Footer>
       </Content>
+      <Footer style={{width: "100%", position: "absolute", bottom: 0, padding: 0, margin: 0,}}>
+        <MyFooter/>
+      </Footer>
     </Layout>
   );
 }

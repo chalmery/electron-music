@@ -52,6 +52,8 @@ function MyFooter() {
   const [favorite, setFavorite] = useState(false);
   //播放模式
   const [playMode, setPlayMode] = useState(playModeEnum.LIST_LOOP);
+  //进度条长度
+  const progressRef = useRef(null);
 
 
   useEffect(() => {
@@ -86,7 +88,7 @@ function MyFooter() {
       setProgress(progressPercent);
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
-        eventManager.publish(pageEvent.NEXT.value, {playMode, listType: listType.LocalListLoop, metadata});
+        if (metadata) eventManager.publish(pageEvent.NEXT.value, {playMode, listType: listType.LocalListLoop, metadata})
       }
     };
 
@@ -124,12 +126,14 @@ function MyFooter() {
 
   //播放，暂停
   const handlePlayPauseClick = () => {
-    if (playState) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+    if (metadata) {
+      if (playState) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setPlayState(!playState);
     }
-    setPlayState(!playState);
   };
 
 
@@ -149,6 +153,21 @@ function MyFooter() {
     }
   }
 
+
+  /**
+   * 进度条点击
+   * 进度条长度来确定音乐进度
+   */
+  const handleClick = (e) => {
+    if (audioRef) {
+      const progressBar = progressRef.current.getBoundingClientRect();
+      const clickX = e.clientX - progressBar.left
+      const progressBarWidth = progressBar.width
+      const clickPercentage = clickX / progressBarWidth
+      const audioPlayer = audioRef.current
+      audioRef.current.currentTime = audioPlayer.duration * clickPercentage;
+    }
+  };
 
   return (
     <div style={{height: '55px', width: "100%", display: "inline-flex"}}>
@@ -171,7 +190,11 @@ function MyFooter() {
           <PlayArrow onClick={handlePlayPauseClick}/>
         )}
         <SkipNext onClick={() => {
-          eventManager.publish(pageEvent.NEXT.value, {playMode, listType: listType.LocalListLoop, metadata});
+          if (metadata) eventManager.publish(pageEvent.NEXT.value, {
+            playMode,
+            listType: listType.LocalListLoop,
+            metadata
+          })
         }}/>
           <Popover
             content={popoverContent}
@@ -204,7 +227,8 @@ function MyFooter() {
         <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>
           <span>{title}</span>
           <span style={{float: "right"}}>{currentTime}/{duration}</span>
-          <Progress percent={progress} size={"small"} className={"widthMax"} showInfo={false}/>
+          <Progress percent={progress} onClick={handleClick} size={"small"} ref={progressRef} className={"widthMax"}
+                    showInfo={false}/>
         </span>
 
       <audio ref={audioRef} id="audioPlayer"></audio>
