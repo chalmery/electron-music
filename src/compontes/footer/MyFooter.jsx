@@ -52,6 +52,8 @@ function MyFooter() {
   const [favorite, setFavorite] = useState(false);
   //播放模式
   const [playMode, setPlayMode] = useState(playModeEnum.LIST_LOOP);
+  const playModeRef = useRef(playModeEnum.LIST_LOOP);
+
   //进度条长度
   const progressRef = useRef(null);
 
@@ -73,7 +75,7 @@ function MyFooter() {
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
         if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
-          playMode,
+          playMode: playModeRef.current,
           listType: listType.LocalListLoop,
           metadata: metadata.current
         })
@@ -149,12 +151,15 @@ function MyFooter() {
   const handlePlayMode = () => {
     if (playMode === playModeEnum.LIST_LOOP) {
       setPlayMode(playModeEnum.SINGLE_LOOP)
+      playModeRef.current = playModeEnum.SINGLE_LOOP
     }
     if (playMode === playModeEnum.SINGLE_LOOP) {
       setPlayMode(playModeEnum.RANDOM)
+      playModeRef.current = playModeEnum.RANDOM
     }
     if (playMode === playModeEnum.RANDOM) {
       setPlayMode(playModeEnum.LIST_LOOP)
+      playModeRef.current = playModeEnum.LIST_LOOP
     }
   }
 
@@ -196,7 +201,7 @@ function MyFooter() {
         )}
         <SkipNext onClick={() => {
           if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
-            playMode,
+            playMode: playModeRef.current,
             listType: listType.LocalListLoop,
             metadata: metadata.current
           })
