@@ -9,7 +9,6 @@ function open() {
         title: '选择文件路径',
         properties: ['openDirectory', 'multiSelections']
     })
-    console.log(files)
     return files
 
 }
@@ -21,7 +20,6 @@ function saveDir(files) {
     if (historyDir === null) {
         historyDir = '[]'
     }
-    console.log('historyDir ' + historyDir)
 
 
     //2 拼接
@@ -52,7 +50,6 @@ function callback(event, dataDir) {
 
 const openDirAction = () => {
     ipcMain.on(localSetting.OPEN_DIR.value, (event, data) => {
-        console.log(data)
         //1 获取到选择的文件夹
         let files = open()
         if (files !== null && files !== undefined) {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Layout, Menu, Table} from "antd";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
@@ -19,6 +19,7 @@ export default function Local() {
 
     const [dirList, setDirList] = useState([]);
     const [dataSource, setDataSource] = useState([]);
+    const dirListRef = useRef(dirList);
 
     useEffect(() => {
         //查数据
@@ -27,24 +28,22 @@ export default function Local() {
         //回调
         electron.ipcRenderer.on(dataEvent.LOCAL_CALLBACK.value, (event, data) => {
             setDirList(data)
+            dirListRef.current = data
         });
 
-        // 取消订阅
-        return () => {
-            electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
-        };
 
-    }, []);
-
-    useEffect(() => {
         //下一首
         eventManager.subscribe(pageEvent.NEXT.value, handleNext);
 
         // 取消订阅
         return () => {
+            electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
             eventManager.unsubscribe(pageEvent.NEXT.value, handleNext);
+
         };
-    }, [dirList]);
+
+    }, []);
+
 
     const handleMenuClick = ({key}) => {
         const selectedItem = dirList.find((item) => item.key === key);
@@ -64,7 +63,7 @@ export default function Local() {
         let fun = playModeRepository.get(playMode);
         const newData = {
             ...data,
-            dirList: dirList,
+            dirList: dirListRef.current,
         };
         fun(newData);
     }

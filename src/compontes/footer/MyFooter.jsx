@@ -31,7 +31,7 @@ const IconMap = {
 
 function MyFooter() {
   //当前歌曲元数据
-  const [metadata, setMetadata] = useState(null);
+  let metadata = useRef(null);
   //标题
   const [title, setTitle] = useState("听你想听的歌");
   //当前时间
@@ -58,22 +58,6 @@ function MyFooter() {
 
   useEffect(() => {
     const audioPlayer = audioRef.current;
-    const handleEvent = (data) => {
-      setMetadata(data)
-      // 处理事件
-      let {title, picture, path, duration} = data
-      //设置属性
-      setTitle(title);
-      setDuration(formatTime(duration))
-      if (picture) {
-        console.log(picture)
-        const fileUrl = `file://${picture}`
-        setPicture(fileUrl)
-      }
-      //播放音乐
-      play(path)
-      setPlayState(true)
-    };
 
 
     // 订阅事件
@@ -88,7 +72,11 @@ function MyFooter() {
       setProgress(progressPercent);
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
-        if (metadata) eventManager.publish(pageEvent.NEXT.value, {playMode, listType: listType.LocalListLoop, metadata})
+        if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
+          playMode,
+          listType: listType.LocalListLoop,
+          metadata: metadata.current
+        })
       }
     };
 
@@ -101,6 +89,23 @@ function MyFooter() {
     };
 
   }, [audioRef.current]);
+
+
+  const handleEvent = (data) => {
+    metadata.current = data
+    // 处理事件
+    let {title, picture, path, duration} = data
+    //设置属性
+    setTitle(title);
+    setDuration(formatTime(duration))
+    if (picture) {
+      const fileUrl = `file://${picture}`
+      setPicture(fileUrl)
+    }
+    //播放音乐
+    play(path)
+    setPlayState(true)
+  };
 
 
   function play(path) {
@@ -126,7 +131,7 @@ function MyFooter() {
 
   //播放，暂停
   const handlePlayPauseClick = () => {
-    if (metadata) {
+    if (metadata.current) {
       if (playState) {
         audioRef.current.pause();
       } else {
@@ -190,10 +195,10 @@ function MyFooter() {
           <PlayArrow onClick={handlePlayPauseClick}/>
         )}
         <SkipNext onClick={() => {
-          if (metadata) eventManager.publish(pageEvent.NEXT.value, {
+          if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
             playMode,
             listType: listType.LocalListLoop,
-            metadata
+            metadata: metadata.current
           })
         }}/>
           <Popover
