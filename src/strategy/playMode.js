@@ -10,12 +10,25 @@ const singleLoop = (data) => {
   eventManager.publish(pageEvent.CLICK_MUSIC.value, data.metadata);
 }
 
+function generateRandomNum(max, min) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /**
  * 随机播放
  * @param data
  */
 const random = (data) => {
-  console.log("随机播放")
+  let {dirList} = data
+  let randomNum = generateRandomNum(0, dirList.length - 1);
+  let dir = dirList[randomNum]
+  if (dir) {
+    let randomNum = generateRandomNum(0, dir.value.length - 1);
+    let metadata = dir.value[randomNum];
+    if (metadata) {
+      eventManager.publish(pageEvent.CLICK_MUSIC.value, metadata);
+    }
+  }
 }
 
 /**
