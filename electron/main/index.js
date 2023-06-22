@@ -45,9 +45,8 @@ function createWindow() {
     title: '',
     icon: [
       join(process.env.PUBLIC, 'icons/music.png'),
+      join(process.env.PUBLIC, 'icons/music@2x.png'),
       join(process.env.PUBLIC, 'icons/music@3x.png'),
-      join(process.env.PUBLIC, 'icons/music128x128.png'),
-      join(process.env.PUBLIC, 'icons/icon256x256.png'),
     ],
     webPreferences: {
       preload,
@@ -90,20 +89,28 @@ function loadFile() {
 
 app.whenReady().then(() => {
   createWindow()
-
-  //
-  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/icons/music.png'))
-  let tray = new Tray(icon)
+  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, '/icons/music128x128.png'))
+  const resizedIcon = icon.resize({width: 128, height: 128});
+  let tray = new Tray(resizedIcon)
   const contextMenu = Menu.buildFromTemplate([
-    {label: '播放', type: 'radio'},
-    {label: '上一首', type: 'radio'},
-    {label: '下一首', type: 'radio', checked: true},
-    {label: '退出', type: 'radio'}
+    {label: '播放'},
+    {label: '上一首'},
+    {label: '下一首'},
+    {
+      label: '显示',
+      click: () => {
+        mainWindow.show(); // 显示窗口
+      }
+    },
+    {
+      label: '退出',
+      click: () => {
+        app.quit();
+      }
+    }
   ])
-
   tray.setContextMenu(contextMenu)
-  tray.setToolTip('This is my application')
-  tray.setTitle('This is my title')
+  tray.setToolTip('Electron-Music')
 })
 
 app.on('browser-window-created', function (e, window) {
