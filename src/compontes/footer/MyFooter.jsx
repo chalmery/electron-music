@@ -101,7 +101,7 @@ function MyFooter(props) {
     let {title, picture, path, duration} = data
     //设置属性
     setTitle(title);
-    setDuration(formatTime(duration))
+    setDuration(duration)
     if (picture) {
       const fileUrl = `file://${picture}`
       setPicture(fileUrl)

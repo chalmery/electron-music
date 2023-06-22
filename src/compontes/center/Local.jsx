@@ -5,21 +5,31 @@ import localSetting from "../../../electron/lib/event";
 import eventManager from '../../event/eventManager';
 import pageEvent from "@/event/pageEvent";
 import {playModeRepository} from "@/strategy/repository/repository";
+import icon from '/icons/music256x256.png';
 
 const {Content, Sider} = Layout;
 
 
 export default function Local() {
     const columns = [
+        {
+            "title": "歌曲", "dataIndex": "picture", "key": "picture",
+            render: (picture) => {
+                let img = picture === null ? icon : `file://${picture}`
+                return <img src={img} alt={icon} style={{width: '35px', borderRadius: "2px"}}/>
+            }
+        },
         {"title": "歌曲", "dataIndex": "title", "key": "title"},
         {"title": "歌手", "dataIndex": "artist", "key": "artist"},
         {"title": "专辑", "dataIndex": "album", "key": "album"},
+        {"title": "时长", "dataIndex": "duration", "key": "duration"},
         {"title": "类型", "dataIndex": "type", "key": "type"}
     ];
 
     const [dirList, setDirList] = useState([]);
     const [dataSource, setDataSource] = useState([]);
     const dirListRef = useRef(dirList);
+    const [thisMusic, setThisMusic] = useState(null);
 
     useEffect(() => {
         //查数据
@@ -68,7 +78,8 @@ export default function Local() {
         const newData = {
             ...data,
             dirList: dirListRef.current,
-            type: pageEvent.PRE
+            type: pageEvent.PRE,
+            call: setThisMusic
         };
         fun(newData);
     }
@@ -84,10 +95,19 @@ export default function Local() {
         const newData = {
             ...data,
             dirList: dirListRef.current,
-            type: pageEvent.NEXT
+            type: pageEvent.NEXT,
+            call: setThisMusic
         };
         fun(newData);
     }
+
+
+    const rowClassName = (record, index) => {
+        if (thisMusic) {
+            return thisMusic === record ? 'highlight-row,color-row' : ''
+        }
+        return ''
+    };
 
     return (
       <Layout className='layout'>
@@ -112,11 +132,12 @@ export default function Local() {
                         onRow={(record) => {
                             return {
                                 onClick: (event) => {
+                                    setThisMusic(record)
                                     eventManager.publish(pageEvent.CLICK_MUSIC.value, record);
                                 }
                             };
                         }}
-                        bordered={true}
+                        rowClassName={rowClassName}
                         size={"small"}
                         columns={columns}
                         pagination={false}

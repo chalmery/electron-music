@@ -19,13 +19,14 @@ function generateRandomNum(max, min) {
  * @param data
  */
 const random = (data) => {
-  let {dirList} = data
+  let {dirList, call} = data
   let randomNum = generateRandomNum(0, dirList.length - 1);
   let dir = dirList[randomNum]
   if (dir) {
     let randomNum = generateRandomNum(0, dir.value.length - 1);
     let metadata = dir.value[randomNum];
     if (metadata) {
+      call(metadata)
       eventManager.publish(pageEvent.CLICK_MUSIC.value, metadata);
     }
   }

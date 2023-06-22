@@ -6,7 +6,7 @@ import pageEvent from "@/event/pageEvent";
  * @param data
  */
 const localListLoop = (data) => {
-  let {metadata, dirList, type} = data
+  let {metadata, dirList, type, call} = data
   if (metadata) {
     const dirInfo = dirList.find(item => item.key === metadata.parentPath)
     const values = dirInfo.value;
@@ -19,6 +19,7 @@ const localListLoop = (data) => {
       nextIndex = (currentIndex - 1 + values.length) % values.length;
     }
     const nextMetaData = values[nextIndex];
+    call(nextMetaData)
     eventManager.publish(pageEvent.CLICK_MUSIC.value, nextMetaData);
   }
 }

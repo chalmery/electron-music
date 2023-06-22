@@ -12,7 +12,6 @@ const {parseFile} = require('music-metadata');
 const fileTypeList = ['FLAC', 'flac', 'MP3', 'mp3', 'ape', 'APE', 'MPEG', 'Ogg']
 
 
-//TODO 递归
 function readDir(dir, fileList) {
     try {
         let files = readdirSync(dir, 'utf-8')
@@ -72,7 +71,7 @@ function parseMetaData(fileList, callback, event) {
                     parentPath: value.dir,
                     picture: null,
                     path: value.filePath,
-                    duration: data.format.duration,
+                    duration: formatTime(data.format.duration),
                     type: data.format.container
                 }
                 if (data.common.picture !== undefined && data.common.picture.length !== 0) {
@@ -147,6 +146,16 @@ const dataSyncAction = () => {
         // //解析元数据,存储
         parseMetaData(fileList, call, event)
     })
+}
+
+
+function formatTime(seconds) {
+    const totalSeconds = Math.floor(seconds); // 取整数部分
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    const formattedMins = mins.toString().padStart(2, "0");
+    const formattedSecs = secs.toString().padStart(2, "0");
+    return `${formattedMins}:${formattedSecs}`;
 }
 
 export {

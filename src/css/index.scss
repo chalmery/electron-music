@@ -87,6 +87,11 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   user-select: none; /* 禁止文本内容选中 */
 }
 
+/* 修改表格行属性 */
+.color-row {
+  background-color: #E6F4FF;
+}
+
 .auto {
   overflow: auto
 }
