@@ -35,11 +35,14 @@ export default function Local() {
         //下一首
         eventManager.subscribe(pageEvent.NEXT.value, handleNext);
 
+        //上一首
+        eventManager.subscribe(pageEvent.PRE.value, handlePre);
+
         // 取消订阅
         return () => {
             electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
             eventManager.unsubscribe(pageEvent.NEXT.value, handleNext);
-
+            eventManager.unsubscribe(pageEvent.PRE.value, handlePre);
         };
 
     }, []);
@@ -53,6 +56,23 @@ export default function Local() {
         }
     }
 
+
+    /**
+     * 上一首事件处理
+     * @param data 当前音乐元数据
+     */
+    const handlePre = (data) => {
+        //策略
+        let {playMode} = data;
+        let fun = playModeRepository.get(playMode);
+        const newData = {
+            ...data,
+            dirList: dirListRef.current,
+            type: pageEvent.PRE
+        };
+        fun(newData);
+    }
+
     /**
      * 下一首事件处理
      * @param data 当前音乐元数据
@@ -64,6 +84,7 @@ export default function Local() {
         const newData = {
             ...data,
             dirList: dirListRef.current,
+            type: pageEvent.NEXT
         };
         fun(newData);
     }

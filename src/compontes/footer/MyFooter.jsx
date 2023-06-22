@@ -193,7 +193,13 @@ function MyFooter() {
           borderRight: "1px solid rgb(222, 222, 222)",
         }}
       >
-       <SkipPrevious/>
+       <SkipPrevious onClick={() => {
+         if (metadata.current) eventManager.publish(pageEvent.PRE.value, {
+           playMode: playModeRef.current,
+           listType: listType.LocalListLoop,
+           metadata: metadata.current
+         })
+       }}/>
         {playState ? (
           <Pause onClick={handlePlayPauseClick}/>
         ) : (

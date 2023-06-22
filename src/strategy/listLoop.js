@@ -6,13 +6,18 @@ import pageEvent from "@/event/pageEvent";
  * @param data
  */
 const localListLoop = (data) => {
-  let {metadata, dirList} = data
+  let {metadata, dirList, type} = data
   if (metadata) {
     const dirInfo = dirList.find(item => item.key === metadata.parentPath)
     const values = dirInfo.value;
     //找到指定key的元素的索引。
     const currentIndex = values.findIndex(item => item.key === metadata.key);
-    const nextIndex = (currentIndex + 1) % values.length;
+    let nextIndex;
+    if (type === pageEvent.NEXT) {
+      nextIndex = (currentIndex + 1) % values.length;
+    } else {
+      nextIndex = (currentIndex - 1 + values.length) % values.length;
+    }
     const nextMetaData = values[nextIndex];
     eventManager.publish(pageEvent.CLICK_MUSIC.value, nextMetaData);
   }
