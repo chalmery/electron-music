@@ -29,7 +29,7 @@ const IconMap = {
 };
 
 
-function MyFooter() {
+function MyFooter(props) {
   //当前歌曲元数据
   let metadata = useRef(null);
   //标题
@@ -56,6 +56,8 @@ function MyFooter() {
 
   //进度条长度
   const progressRef = useRef(null);
+
+  const [status, setStatus] = useState(false);
 
 
   useEffect(() => {
@@ -178,7 +180,13 @@ function MyFooter() {
       audioRef.current.currentTime = audioPlayer.duration * clickPercentage;
     }
   };
-
+  const openMusic = () => {
+    const newStatus = !status;
+    setStatus(newStatus);
+    console.log(props)
+    console.log(newStatus)
+    props.onStatusChange(newStatus);
+  }
   return (
     <div style={{height: '55px', width: "100%", display: "inline-flex"}}>
       {/*左侧播放按钮栏*/}
@@ -237,7 +245,8 @@ function MyFooter() {
       </span>
 
       <span style={{flexGrow: 1, display: "inline-flex", padding: '5px'}}>
-        <div className='imgCenter' style={{width: "45px", textAlign: "center"}}>
+        <div className='imgCenter' style={{width: "45px", textAlign: "center"}}
+             onClick={openMusic}>
           <img width={"100%"} src={picture} alt={icon} style={{borderRadius: "2px"}}/>
         </div>
         <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>

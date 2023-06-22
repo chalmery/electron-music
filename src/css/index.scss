@@ -83,6 +83,10 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   background-color: transparent;
 }
 
+.ant-table-row:hover .ant-table-cell {
+  user-select: none; /* 禁止文本内容选中 */
+}
+
 .auto {
   overflow: auto
 }

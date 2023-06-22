@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import LeftMenu from "@/compontes/left/LeftMenu";
 import {Redirect} from "react-router-dom";
@@ -9,16 +9,25 @@ import {Layout} from "antd";
 import MyFooter from "@/compontes/footer/MyFooter";
 import Playlist from "@/compontes/center/Playlist";
 import Love from "@/compontes/center/Love";
+import Lyrics from "@/compontes/footer/Lyrics";
 
 const {Footer, Sider, Content} = Layout;
 
 export default function Admin() {
+  const [showDiv, setShowDiv] = useState(false);
+
+  const handleStatusChange = (newStatus) => {
+    setShowDiv(newStatus);
+
+  };
   return (
+
     <Layout>
+      {showDiv && <Lyrics style={{position: "absolute", zIndex: 100, width: "100vh"}}/>}
       <Sider>
         <LeftMenu/>
       </Sider>
-      <Content style={{position: "relative", height: "100vh", overflow: 'hidden',}}>
+      <Content>
         <CacheSwitch>
           <Redirect from="/" exact to="/"/>
           <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
@@ -28,7 +37,7 @@ export default function Admin() {
         </CacheSwitch>
       </Content>
       <Footer style={{width: "100%", position: "absolute", zIndex: 2, bottom: 0, padding: 0, margin: 0}}>
-        <MyFooter/>
+        <MyFooter onStatusChange={handleStatusChange}/>
       </Footer>
     </Layout>
   );
