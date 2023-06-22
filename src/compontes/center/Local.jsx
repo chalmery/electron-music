@@ -104,7 +104,7 @@ export default function Local() {
 
     const rowClassName = (record, index) => {
         if (thisMusic) {
-            return thisMusic === record ? 'highlight-row,color-row' : ''
+            return thisMusic === record ? 'color-row' : ''
         }
         return ''
     };
