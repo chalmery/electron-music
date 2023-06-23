@@ -57,6 +57,7 @@ function MyFooter(props) {
   //进度条长度
   const progressRef = useRef(null);
 
+  //歌词组件的状态
   const [status, setStatus] = useState(false);
 
 
@@ -183,10 +184,9 @@ function MyFooter(props) {
   const openMusic = () => {
     const newStatus = !status;
     setStatus(newStatus);
-    console.log(props)
-    console.log(newStatus)
-    props.onStatusChange(newStatus);
+    props.onStatusChange(newStatus, metadata.current);
   }
+
   return (
     <div style={{height: '55px', width: "100%", display: "inline-flex"}}>
       {/*左侧播放按钮栏*/}

@@ -6,6 +6,7 @@ import dataName from "../../lib/dataName";
 import path from "path";
 import crypto from "crypto";
 import mime from "mime-types";
+import {makeGetRequest} from "../../lib/http";
 
 const {parseFile} = require('music-metadata');
 
@@ -24,7 +25,8 @@ function readDir(dir, fileList) {
             if (info.isFile()) {
                 fileList.push({
                     dir: dir,
-                    filePath: filePath
+                    filePath: filePath,
+                    hashCode: crypto.createHash('md5').update(filePath).digest('hex')
                 })
             } else {
                 readDir(filePath, fileList)
@@ -48,6 +50,77 @@ function batchReadDir(dirs) {
     return fileList;
 }
 
+function executeRequests(musicList, index, callback) {
+    console.log(`调用接口开始 ${index}`)
+    if (index >= musicList.length) {
+        // 所有请求已执行完毕
+        console.log(`所有请求已执行完毕`)
+        callback()
+        return;
+    }
+    const metadata = musicList[index];
+    makeGetRequest(`https://music.163.com/api/search/get?s=${metadata.title}-${metadata.artist}&type=1&limit=1`)
+      .then((data) => {
+          let musicId = data?.result?.songs[0]?.id
+          console.log(`调用网易接口完成 musicId ${musicId}`)
+          if (musicId) {
+              //调用接口获取歌词
+              makeGetRequest(`https://music.163.com/api/song/lyric?id=${musicId}&lv=1&kv=1&tv=-1`)
+                .then((data) => {
+                    let lrc = data?.lrc?.lyric
+                    if (lrc) {
+                        let picturePath = path.join(__dirname, '../' + metadata.hashCode + '.lrc')
+                        writeFile(picturePath, lrc, "utf-8", (err) => {
+                            console.log(`调用接口完成 ${index}`)
+                            // 递归调用，在指定的间隔后执行下一个请求
+                            setTimeout(() => {
+                                executeRequests(musicList, index + 1, callback);
+                            }, 200);
+                        })
+                    } else {
+                        // 递归调用，在指定的间隔后执行下一个请求
+                        setTimeout(() => {
+                            executeRequests(musicList, index + 1, callback);
+                        }, 200);
+                    }
+                }).catch((error) => {
+                  // 处理请求错误
+                  console.error(`Error executing request for URL: ${musicList}`, error);
+                  // 递归调用，在指定的间隔后执行下一个请求
+                  setTimeout(() => {
+                      executeRequests(musicList, index + 1, callback);
+                  }, 200);
+              })
+          }
+      })
+      .catch((error) => {
+          // 处理请求错误
+          console.error(`Error executing request for URL: ${musicList}`, error);
+          // 递归调用，在指定的间隔后执行下一个请求
+          setTimeout(() => {
+              executeRequests(musicList, index + 1, callback);
+          }, 200);
+      });
+}
+
+function savePicture(data, value, metadata, hashCode) {
+    //存储二进制图片
+    let picture = data.common.picture[0].data
+    //获取文件后缀
+    let imageMimeType = data.common.picture[0].format
+    let format = mime.extension(imageMimeType)
+
+    let picturePath = path.join(__dirname, '../' + hashCode + '.' + format)
+    metadata.picture = picturePath
+
+    //文件不存在则写入
+    access(picturePath, (err) => {
+        if (err) {
+            writeFile(picturePath, picture, (err) => {
+            })
+        }
+    })
+}
 
 /**
  * 父级目录，文件路径
@@ -59,6 +132,10 @@ function parseMetaData(fileList, callback, event) {
     let metaList = []
     let mapSize = fileList.length
     let key = 1
+
+    let musicList = []
+
+    //循环解析音乐元数据
     fileList.forEach((value) => {
         let promise = parseFile(value.filePath)
         promise.then((data) => {
@@ -72,31 +149,15 @@ function parseMetaData(fileList, callback, event) {
                     picture: null,
                     path: value.filePath,
                     duration: formatTime(data.format.duration),
-                    type: data.format.container
+                    type: data.format.container,
+                    hashCode: value.hashCode,
                 }
+                //保存图片
                 if (data.common.picture !== undefined && data.common.picture.length !== 0) {
-                    //存储二进制图片
-                    let picture = data.common.picture[0].data
-                    //获取文件后缀
-                    let imageMimeType = data.common.picture[0].format
-                    let format = mime.extension(imageMimeType)
-
-                    let hashCode = crypto.createHash('md5').update(value.filePath).digest('hex')
-                    let picturePath = path.join(__dirname, '../' + hashCode + '.' + format)
-                    metadata.picture = picturePath
-
-                    //文件不存在则写入
-                    access(picturePath, (err) => {
-                        if (err) {
-                            writeFile(picturePath, picture, (err) => {
-                            })
-                        }
-                    })
+                    savePicture(data, value, metadata, value.hashCode);
                 }
-                metaList.push({
-                    key: value.dir,
-                    value: metadata
-                })
+                musicList.push(metadata)
+                metaList.push({key: value.dir, value: metadata})
             }
         }).catch((err) => {
             console.log(value);
@@ -105,7 +166,11 @@ function parseMetaData(fileList, callback, event) {
             mapSize -= 1
             key += 1
             if (mapSize === 0) {
-                callback(metaList, event)
+                //处理歌词
+                executeRequests(musicList, 0, () => {
+                    //回调前端
+                    callback(metaList, event)
+                })
             }
         })
     })

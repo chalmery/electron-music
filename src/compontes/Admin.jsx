@@ -14,31 +14,36 @@ import Lyrics from "@/compontes/footer/Lyrics";
 const {Footer, Sider, Content} = Layout;
 
 export default function Admin() {
-  const [showDiv, setShowDiv] = useState(false);
+  //是否展示歌词页面
+  const [show, setShow] = useState(false)
 
-  const handleStatusChange = (newStatus) => {
-    setShowDiv(newStatus);
+  const [metadata, setMetadata] = useState(null)
 
-  };
+  const handleStatusChange = (status, metadata) => {
+    setShow(status)
+    setMetadata(metadata)
+  }
+
   return (
-
-    <Layout>
-      {showDiv && <Lyrics style={{position: "absolute", zIndex: 100, width: "100vh"}}/>}
-      <Sider>
-        <LeftMenu/>
-      </Sider>
-      <Content>
-        <CacheSwitch>
-          <Redirect from="/" exact to="/"/>
-          <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
-          <CacheRoute path="/online" component={Online}/>
-          <CacheRoute path="/playlist" component={Playlist}/>
-          <CacheRoute path="/love" component={Love}/>
-        </CacheSwitch>
-      </Content>
-      <Footer style={{width: "100%", position: "absolute", zIndex: 2, bottom: 0, padding: 0, margin: 0}}>
-        <MyFooter onStatusChange={handleStatusChange}/>
-      </Footer>
-    </Layout>
+    <div>
+      <Lyrics show={show} metadata={metadata}/>
+      <Layout>
+        <Sider>
+          <LeftMenu/>
+        </Sider>
+        <Content>
+          <CacheSwitch>
+            <Redirect from="/" exact to="/"/>
+            <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
+            <CacheRoute path="/online" component={Online}/>
+            <CacheRoute path="/playlist" component={Playlist}/>
+            <CacheRoute path="/love" component={Love}/>
+          </CacheSwitch>
+        </Content>
+        <Footer style={{width: "100%", position: "absolute", zIndex: 3, bottom: 0, padding: 0, margin: 0}}>
+          <MyFooter onStatusChange={handleStatusChange}/>
+        </Footer>
+      </Layout>
+    </div>
   );
 }
