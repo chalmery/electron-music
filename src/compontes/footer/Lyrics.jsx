@@ -31,7 +31,6 @@ export default function Lyrics(props) {
 
     //查询歌词
     electron.ipcRenderer.on(dataEvent.LRC_CALLBACK.value, (event, data) => {
-      console.log(data)
       setLrc(data)
     });
 

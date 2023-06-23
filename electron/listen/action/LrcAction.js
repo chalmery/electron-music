@@ -43,7 +43,6 @@ function parseLrc(lrc) {
       lrcArray.push({time, text});
     }
   }
-  console.log(lrcArray)
   return lrcArray
 }
 
