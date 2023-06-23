@@ -7,6 +7,8 @@ let pageEvent = {
   NEXT: {label: "下一首", value: "next"},
   //前一首
   PRE: {label: "上一首", value: "pre"},
+  //当前歌曲时间
+  CURRENT_TIME: {label: "当前歌曲时间", value: "currentTime"},
 
 
 }

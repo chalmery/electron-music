@@ -75,6 +75,9 @@ function MyFooter(props) {
       const progressPercent = (currentTime / duration) * 100;
       setCurrentTime(formatTime(currentTime))
       setProgress(progressPercent);
+      // 发布当前歌曲播放时间
+      eventManager.publish(pageEvent.CURRENT_TIME.value, currentTime)
+
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
         if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
