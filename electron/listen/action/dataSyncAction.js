@@ -84,19 +84,18 @@ function executeRequests(musicList, index, callback) {
                         }, 200);
                     }
                 }).catch((error) => {
-                  // 所有请求已执行完毕
-                  console.log(`所有请求已执行完毕${error}`)
-                  callback()
+                  // 处理请求错误
+                  console.error(`Error executing request for URL: ${musicList}`, error);
+                  // 递归调用，在指定的间隔后执行下一个请求
+                  setTimeout(() => {
+                      executeRequests(musicList, index + 1, callback);
+                  }, 200);
               })
           }
       })
       .catch((error) => {
-          // 处理请求错误
-          console.error(`Error executing request for URL: ${musicList}`, error);
-          // 递归调用，在指定的间隔后执行下一个请求
-          setTimeout(() => {
-              executeRequests(musicList, index + 1, callback);
-          }, 200);
+          // TODO 调用接口失败，暂时认为是未联网
+          callback()
       });
 }
 

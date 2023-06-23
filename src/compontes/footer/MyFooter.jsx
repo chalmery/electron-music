@@ -184,7 +184,7 @@ function MyFooter(props) {
   const openMusic = () => {
     const newStatus = !status;
     setStatus(newStatus);
-    props.onStatusChange(newStatus, metadata.current);
+    props.onStatusChange(newStatus);
   }
 
   return (
@@ -245,8 +245,7 @@ function MyFooter(props) {
       </span>
 
       <span style={{flexGrow: 1, display: "inline-flex", padding: '5px'}}>
-        <div className='imgCenter' style={{width: "45px", textAlign: "center"}}
-             onClick={openMusic}>
+        <div className='imgCenter' style={{width: "45px", textAlign: "center"}} onClick={openMusic}>
           <img width={"100%"} src={picture} alt={icon} style={{borderRadius: "2px"}}/>
         </div>
         <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>

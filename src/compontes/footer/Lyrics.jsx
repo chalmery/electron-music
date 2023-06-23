@@ -1,9 +1,45 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 
 import icon from '/icons/music256x256.png';
+import pageEvent from "@/event/pageEvent";
+import eventManager from "@/event/eventManager";
+import dataEvent from "../../../electron/lib/event";
+import localSetting from "../../../electron/lib/event";
 
 export default function Lyrics(props) {
-  const {show, metadata} = props;
+
+  /**
+   * 正在播放的歌曲
+   */
+  const [metadata, setMetadata] = useState(null);
+  /**
+   * 歌词
+   */
+  const [lrc, setLrc] = useState(null);
+
+  const {show} = props;
+
+  useEffect(() => {
+    // 订阅事件
+    eventManager.subscribe(pageEvent.CLICK_MUSIC.value, handleEvent)
+
+
+    //查询歌词
+    electron.ipcRenderer.on(dataEvent.LRC_CALLBACK.value, (event, data) => {
+      setLrc(data)
+    });
+
+
+    return () => {
+      eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
+      electron.ipcRenderer.removeAllListeners(localSetting.LRC_CALLBACK.value);
+    }
+  }, [])
+
+  const handleEvent = (data) => {
+    setMetadata(data)
+  };
+
 
   const containerStyle = {
     backgroundSize: 'cover',
@@ -43,7 +79,10 @@ export default function Lyrics(props) {
                  alt={icon}/>
           </div>
           <div style={{float: "right", height: "100%", width: "50%"}}>
-            右
+
+            <div style={{whiteSpace: 'pre-line'}}>
+              {lrc}
+            </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,11 @@ let localSetting = {
     //本地音乐
     LOCAL: {label: "本地音乐", value: "local"},
     LOCAL_CALLBACK: {label: "本地音乐回调", value: "localCallback"},
+
+    //查询歌词
+    LRC: {label: "查询歌词", value: "lrc"},
+    LRC_CALLBACK: {label: "查询歌词回调", value: "lrcCallback"},
+
 }
 
 export default localSetting;

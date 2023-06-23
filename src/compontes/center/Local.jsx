@@ -13,7 +13,7 @@ const {Content, Sider} = Layout;
 export default function Local() {
     const columns = [
         {
-            "title": "歌曲", "dataIndex": "picture", "key": "picture",
+            "title": "图片", "dataIndex": "picture", "key": "picture",
             render: (picture) => {
                 let img = picture === null ? icon : `file://${picture}`
                 return <img src={img} alt={icon} style={{width: '35px', borderRadius: "2px"}}/>
@@ -73,15 +73,15 @@ export default function Local() {
      */
     const handlePre = (data) => {
         //策略
-        let {playMode} = data;
-        let fun = playModeRepository.get(playMode);
+        let {playMode} = data
+        let fun = playModeRepository.get(playMode)
         const newData = {
             ...data,
             dirList: dirListRef.current,
             type: pageEvent.PRE,
             call: setThisMusic
-        };
-        fun(newData);
+        }
+        fun(newData)
     }
 
     /**
@@ -90,15 +90,33 @@ export default function Local() {
      */
     const handleNext = (data) => {
         //策略
-        let {playMode} = data;
-        let fun = playModeRepository.get(playMode);
+        let {playMode} = data
+        let fun = playModeRepository.get(playMode)
         const newData = {
             ...data,
             dirList: dirListRef.current,
             type: pageEvent.NEXT,
             call: setThisMusic
-        };
-        fun(newData);
+        }
+        fun(newData)
+    }
+
+    /**
+     * 查询歌词
+     * @param data
+     */
+    const findLrc = (data) => {
+        electron.ipcRenderer.send(dataEvent.LRC.value, data)
+    }
+
+    /**
+     * 列表点击
+     * @param record
+     */
+    function tableRowClick(record) {
+        setThisMusic(record)
+        eventManager.publish(pageEvent.CLICK_MUSIC.value, record)
+        findLrc(record)
     }
 
 
@@ -132,8 +150,7 @@ export default function Local() {
                         onRow={(record) => {
                             return {
                                 onClick: (event) => {
-                                    setThisMusic(record)
-                                    eventManager.publish(pageEvent.CLICK_MUSIC.value, record);
+                                    tableRowClick(record);
                                 }
                             };
                         }}
