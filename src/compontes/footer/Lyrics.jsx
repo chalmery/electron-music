@@ -17,6 +17,8 @@ export default function Lyrics(props) {
    */
   const [lrc, setLrc] = useState([]);
 
+  const lrcRef = useRef(null)
+
   const lyricsContainerRef = useRef(null);
 
   const {show} = props;
@@ -32,6 +34,7 @@ export default function Lyrics(props) {
     //查询歌词
     electron.ipcRenderer.on(dataEvent.LRC_CALLBACK.value, (event, data) => {
       setLrc(data)
+      lrcRef.current = data
     });
 
 
@@ -52,10 +55,13 @@ export default function Lyrics(props) {
    * @param data
    */
   const handleCurrentTime = (data) => {
+    if(!lrcRef){
+      return
+    }
     // 寻找当前播放时间对应的歌词索引
     let currentLyricIndex = 0;
-    for (let i = 0; i < lrc.length; i++) {
-      if (data >= lrc[i].time) {
+    for (let i = 0; i < lrcRef.current.length; i++) {
+      if (data >= lrcRef.current[i].time) {
         currentLyricIndex = i;
       } else {
         break;
