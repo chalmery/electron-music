@@ -40,7 +40,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     height: 618,
     width: 1000,
-    maximizable: false,
+    maximizable: true,
     fullscreen: false,
     title: '',
     icon: [
