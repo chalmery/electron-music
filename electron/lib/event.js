@@ -6,6 +6,8 @@ let localSetting = {
     DIR_DATA_CALLBACK: {label: "发送目录数据给页面", value: "dirDataCallback"},
     SYNC_DATA: {label: "同步数据", value: "syncData"},
     SYNC_DATA_CALLBACK: {label: "同步数据回调", value: "syncDataCallBack"},
+    INSTALL_LRC: {label: "下载歌词", value: "installLrc"},
+    INSTALL_LRC_CALLBACK: {label: "下载歌词回调", value: "installLrcBack"},
 
     //本地音乐
     LOCAL: {label: "本地音乐", value: "local"},

@@ -33,6 +33,20 @@ function save(fileName, data, callback) {
     })
 }
 
+//存储文件
+function saveBase(path, data, callback) {
+    fs.writeFile(path, data, (err) => {
+        if (err) {
+            console.log("save error " + err)
+            return
+        }
+        console.log('Data written successfully to disk')
+        if (callback !== undefined) {
+            callback()
+        }
+    })
+}
+
 //同步存储文件
 function saveSync(fileName, data) {
     fs.writeFileSync(getPath(fileName), data, (err) => {
@@ -47,6 +61,18 @@ function saveSync(fileName, data) {
 //读文件
 function read(fileName, callback) {
     fs.readFile(getPath(fileName), 'utf-8', (err, data) => {
+        if (err) {
+            console.log(err)
+        }
+        if (callback !== undefined) {
+            callback(data)
+        }
+    })
+}
+
+//读文件
+function readBase(path, callback) {
+    fs.readFile(path, 'utf-8', (err, data) => {
         if (err) {
             console.log(err)
         }
@@ -72,5 +98,7 @@ export {
     saveSync,
     read,
     readSync,
-    getPath
+    getPath,
+    saveBase,
+    readBase
 }
