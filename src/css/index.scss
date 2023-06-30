@@ -127,3 +127,19 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
 .highlight {
   color: #FFC094;
 }
+
+//本地设置相关
+.ant-modal-body::-webkit-scrollbar {
+  width: 0;
+  background-color: transparent;
+}
+.list-item-clear{
+  display: none;
+}
+.list-item{
+  user-select: none;
+}
+.list-item:hover .list-item-clear {
+  display: block;
+  color:#ff4d4f
+}

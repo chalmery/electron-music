@@ -3,8 +3,17 @@ import localSetting from "../../lib/event";
 import path from "path";
 import { makeGetRequest } from "../../lib/http";
 import { saveBase, readBase } from "../../lib/fs";
+import dataName from "../../lib/dataName";
 
+/**
+ * 如果歌曲有live 去掉live
+ * @param {*} title
+ * @returns
+ */
 const replactTitle = (title) => {
+  if (!title) {
+    return null;
+  }
   let data = title.replace(/\（live\）/g, "");
   return data.replace(/\(live\)/g, "");
 };
@@ -18,8 +27,6 @@ const executeRequests = (musicList, index, callback) => {
     return;
   }
   const metadata = musicList[index];
-  //如果歌曲有live 去掉live
-  console.log(metadata);
   let title = replactTitle(metadata.title);
   makeGetRequest(`https://music.163.com/api/search/get?s=${title}-${metadata.artist}&type=1&limit=10`)
     .then((data) => {
@@ -95,7 +102,7 @@ const getMusicId = (songs, metadata) => {
 const installLrc = () => {
   ipcMain.on(localSetting.INSTALL_LRC.value, (event, data) => {
     //1 获取全部歌曲信息
-    let metdaataPath = path.join(__dirname, "../metadata.json");
+    let metdaataPath = path.join(__dirname, "../",dataName.META_DATA.value,".json");
     readBase(metdaataPath, (data) => {
       let metadataList = JSON.parse(data);
       const dataArray = metadataList.map((metadata) => metadata.value);

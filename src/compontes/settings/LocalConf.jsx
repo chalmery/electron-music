@@ -3,6 +3,8 @@ import { Button, List, message, Space } from "antd";
 import localSetting from "../../../electron/lib/event.js";
 import dataEvent from "../../../electron/lib/event";
 
+import { Backspace } from "@mui/icons-material";
+
 const electron = window.electron;
 
 export default function LocalConf() {
@@ -33,15 +35,21 @@ export default function LocalConf() {
     });
 
     //回调
-    electron.ipcRenderer.on(localSetting.INSTALL_LRC_CALLBACK.value, (event) => {
+    electron.ipcRenderer.on(localSetting.INSTALL_LRC_CALLBACK.value, () => {
       setLrcLoading(false);
       message.success("下载完成", 2);
+    });
+
+    //回调
+    electron.ipcRenderer.on(localSetting.UPDATE_DIR_CALLBACK.value, () => {
+      message.success("更新文件夹数据成功", 2);
     });
 
     return () => {
       electron.ipcRenderer.removeAllListeners(localSetting.DIR_DATA_CALLBACK.value);
       electron.ipcRenderer.removeAllListeners(localSetting.SYNC_DATA_CALLBACK.value);
       electron.ipcRenderer.removeAllListeners(localSetting.INSTALL_LRC_CALLBACK.value);
+      electron.ipcRenderer.removeAllListeners(localSetting.UPDATE_DIR_CALLBACK.value);
     };
   }, []);
 
@@ -63,6 +71,13 @@ export default function LocalConf() {
     electron.ipcRenderer.send(localSetting.INSTALL_LRC.value, localDir);
   };
 
+  //删除文件夹
+  const removeDir = (dir) => {
+    let data = localDir.filter((item) => item !== dir);
+    setLocalDir(data);
+    electron.ipcRenderer.send(localSetting.UPDATE_DIR.value, data);
+  };
+
   return (
     <Space direction="vertical" className="widthMax">
       <Space direction="horizontal">
@@ -81,7 +96,14 @@ export default function LocalConf() {
         header={<div>本地音乐文件目录</div>}
         bordered
         dataSource={localDir}
-        renderItem={(item) => <List.Item>{item}</List.Item>}
+        renderItem={(item) => (
+          <List.Item className="list-item">
+            <span>{item}</span>
+            <span className="list-item-clear" onClick={() => removeDir(item)}>
+              <Backspace />
+            </span>
+          </List.Item>
+        )}
       />
     </Space>
   );

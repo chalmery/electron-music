@@ -16,7 +16,7 @@ function open() {
 function saveDir(files) {
 
     //1 先读取文件
-    let historyDir = readSync('dirs')
+    let historyDir = readSync(dataName.DIRS.value)
     if (historyDir === null) {
         historyDir = '[]'
     }
