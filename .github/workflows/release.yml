@@ -50,4 +50,4 @@ jobs:
         with:
           files: "release/**"
         env:
-          GITHUB_TOKEN: ${{ secrets.actions }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS }}
