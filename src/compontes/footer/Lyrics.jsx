@@ -102,12 +102,19 @@ export default function Lyrics(props) {
       <div className="lrc-overlay">
         <div className="lrc-overlay-content">
           <div className="lrc-left">
-            <img
-              className="lrc-left-picture"
-              src={metadata === null ? icon : `file://${metadata.picture}`}
-              alt={icon}
-            />
+            <div>
+              <img
+                className="lrc-left-picture"
+                src={metadata === null ? icon : `file://${metadata.picture}`}
+                alt={icon}
+              />
+              <div className="lrc-left-info">
+                <h3>{metadata?.album}</h3>
+                <span>{metadata?.artist}</span>
+              </div>
+            </div>
           </div>
+
           <div className="lrc-right">
             <div className="lrc-right-lrc">
               <div ref={lyricsContainerRef}>

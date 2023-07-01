@@ -1,10 +1,15 @@
 body {
+  font-family: system-ui;
   margin: 0;
   padding: 0;
   height: 100%;
   background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+*{
+  font-family: system-ui; 
 }
 
 html,
@@ -149,7 +154,7 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   right: 0;
   bottom: 0;
   backdrop-filter: blur(10px);
-  background-color: rgba(71, 71, 71, 0.8);
+  background-color: rgba(67, 67, 67, 0.6);
   padding: 5% 5% 10% 5%;
 }
 
@@ -182,11 +187,18 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   height: 100%;
   width: 50%;
   overflow: auto;
+  color: #e4e4e4;
 }
 
 .lrc-right-lrc::-webkit-scrollbar {
   width: 0;
   background-color: transparent;
+}
+
+.lrc-left-info {
+  display: flex;
+  flex-direction: column;
+  color: #e4e4e4;
 }
 
 //页脚

@@ -203,12 +203,10 @@ function MyFooter(props) {
       {/*左侧播放按钮栏*/}
       <span className="footer-left">
         <SkipPrevious
-          onClick={() => {
-            skipPrevious;
-          }}
+          onClick={skipPrevious}
         />
         {playState ? <Pause onClick={handlePlayPauseClick} /> : <PlayArrow onClick={handlePlayPauseClick} />}
-        <SkipNext onClick={() => {skipNext}} />
+        <SkipNext onClick={skipNext} />
         <Popover content={popoverContent} trigger="click">
           {volume === 0 ? <VolumeOff /> : <VolumeUp />}
         </Popover>
