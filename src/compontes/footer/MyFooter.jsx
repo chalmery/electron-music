@@ -21,6 +21,8 @@ import {
 
 const fs = window.fs;
 
+import dataEvent from "../../../electron/lib/event";
+
 //播放模式枚举
 const IconMap = {
   单曲循环: <RepeatOne />,
@@ -42,7 +44,7 @@ function MyFooter(props) {
   // audio对象
   const audioRef = useRef(null);
   //播放状态
-  const [playState, setPlayState] = useState(false);
+  const playStateRef = useRef(false);
   //音量
   const [volume, setVolume] = useState(100);
   //专辑图像
@@ -87,10 +89,26 @@ function MyFooter(props) {
 
     audioPlayer.addEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
 
+
+    electron.ipcRenderer.on(dataEvent.NEXT.value, (event, data) => {
+      skipNext()
+    });
+
+    electron.ipcRenderer.on(dataEvent.PRE.value, (event, data) => {
+      skipPrevious()
+    });
+
+    electron.ipcRenderer.on(dataEvent.PLAY.value, (event, data) => {
+      handlePlayPauseClick()
+    });
+
     // 取消订阅
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
+      electron.ipcRenderer.removeAllListeners(dataEvent.NEXT.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.PRE.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.PLAY.value);
     };
   }, [audioRef.current]);
 
@@ -107,7 +125,7 @@ function MyFooter(props) {
     }
     //播放音乐
     play(path);
-    setPlayState(true);
+    playStateRef.current = true;
   };
 
   function play(path) {
@@ -131,13 +149,14 @@ function MyFooter(props) {
 
   //播放，暂停
   const handlePlayPauseClick = () => {
+    let playState = playStateRef.current
     if (metadata.current) {
       if (playState) {
         audioRef.current.pause();
       } else {
         audioRef.current.play();
       }
-      setPlayState(!playState);
+      playStateRef.current = !playState
     }
   };
 
@@ -202,10 +221,8 @@ function MyFooter(props) {
     <div className="footer-content">
       {/*左侧播放按钮栏*/}
       <span className="footer-left">
-        <SkipPrevious
-          onClick={skipPrevious}
-        />
-        {playState ? <Pause onClick={handlePlayPauseClick} /> : <PlayArrow onClick={handlePlayPauseClick} />}
+        <SkipPrevious onClick={skipPrevious} />
+        {playStateRef.current ? <Pause onClick={handlePlayPauseClick} /> : <PlayArrow onClick={handlePlayPauseClick} />}
         <SkipNext onClick={skipNext} />
         <Popover content={popoverContent} trigger="click">
           {volume === 0 ? <VolumeOff /> : <VolumeUp />}
@@ -227,7 +244,7 @@ function MyFooter(props) {
       {/* 右侧音乐信息 */}
       <span className="footer-right">
         <div className="footer-right-picture" onClick={openMusic}>
-          <img width={"100%"} src={picture} alt={icon}  className="img"/>
+          <img width={"100%"} src={picture} alt={icon} className="img" />
         </div>
         <span className="footer-right-progress">
           <span>{title}</span>
@@ -244,6 +261,7 @@ function MyFooter(props) {
           />
         </span>
 
+        {/* audio标签 */}
         <audio ref={audioRef} id="audioPlayer"></audio>
       </span>
     </div>
