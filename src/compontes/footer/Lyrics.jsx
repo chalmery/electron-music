@@ -51,7 +51,7 @@ export default function Lyrics(props) {
    * @param data
    */
   const handleCurrentTime = (data) => {
-    if (!lrcRef) {
+    if (!lrcRef.current) {
       return;
     }
     // 寻找当前播放时间对应的歌词索引
@@ -92,8 +92,6 @@ export default function Lyrics(props) {
   };
   if (metadata) {
     containerStyle.backgroundImage = `url(${"file://" + metadata.picture})`;
-  } else {
-    containerStyle.backgroundImage = null;
   }
   const lyricsClass = show ? "lyrics-container show" : "lyrics-container hide";
 
@@ -105,7 +103,7 @@ export default function Lyrics(props) {
             <div>
               <img
                 className="lrc-left-picture"
-                src={metadata === null ? icon : `file://${metadata.picture}`}
+                src={(metadata === null)||(metadata.picture === null) ? icon : `file://${metadata.picture}`}
                 alt={icon}
               />
               <div className="lrc-left-info">

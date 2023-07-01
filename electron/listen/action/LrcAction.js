@@ -24,6 +24,9 @@ const LrcAction = () => {
  * @returns {*[]}
  */
 function parseLrc(lrc) {
+  if(!lrc){
+    return null
+  }
   const lines = lrc.split('\n');
   const lrcArray = [];
 
