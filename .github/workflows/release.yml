@@ -24,20 +24,16 @@ jobs:
         run: npm install
 
       - name: Build
-        run: |
-          npm run build --cmd
-        if: matrix.os == 'windows-latest'
-        env:
-          GH_TOKEN: ${{ secrets.actions }}
+        run: npm run build
 
       # step5: 清理
       - name: Cleanup artifacts
         run: |
-          Get-ChildItem -Path "release" -Exclude *.AppImage, *.tar.gz, *.zip | Remove-Item -Force -Recurse
+          Get-ChildItem -Path "release" | Where-Object { $_.Name -NotMatch ".*\.(zip|tar\.gz|AppImage)" } | Remove-Item -Force -Recurse
         if: matrix.os == 'windows-latest'
 
       - name: Cleanup artifacts
-        run: npx rimraf "release/^!(*.AppImage|*.tar.gz|*.zip)"
+        run: npx rimraf "release/^!(*.zip|*.tar.gz|*.AppImage)"
         if: matrix.os == 'ubuntu-latest'
 
       # step6: 上传
