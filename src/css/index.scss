@@ -2,18 +2,19 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, .layout, #root {
+html,
+.layout,
+#root {
   height: 100%;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 :where(.css-dev-only-do-not-override-k7429z).ant-layout .ant-layout-sider {
@@ -21,15 +22,15 @@ code {
 }
 
 .heightMax {
-  height: 100vh
+  height: 100vh;
 }
 
 .widthMax {
-  width: 100%
+  width: 100%;
 }
 
 :where(.css-dev-only-do-not-override-k7429z).ant-menu-light.ant-menu-root.ant-menu-vertical {
-  border-right: 0
+  border-right: 0;
 }
 
 .center {
@@ -37,7 +38,6 @@ code {
   line-height: 100%;
   padding: 10px 0 10px 0;
 }
-
 
 .rightLayout {
   display: flex;
@@ -50,32 +50,30 @@ code {
 }
 
 .footer {
-  flex-shrink: 0
+  flex-shrink: 0;
 }
 
 .p0 {
-  padding: 0
+  padding: 0;
 }
 
 .border0 {
-  border: 0
+  border: 0;
 }
 
 :where(.css-dev-only-do-not-override-12jzuas).ant-layout .ant-layout-sider {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-right: 1px solid rgb(222, 222, 222);
   height: 100vh;
 }
 
 :where(.css-12jzuas).ant-layout .ant-layout-sider {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
-  background-color: #FFFFFF;
-
+  background-color: #ffffff;
 }
-
 
 /* 隐藏滚动条 */
 .scrollable-container::-webkit-scrollbar {
@@ -89,13 +87,12 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
 
 /* 修改表格行属性 */
 .color-row {
-  background-color: #E6F4FF;
+  background-color: #e6f4ff;
 }
 
 .auto {
-  overflow: auto
+  overflow: auto;
 }
-
 
 .white-icon {
   color: white;
@@ -125,7 +122,7 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
 }
 
 .highlight {
-  color: #FFC094;
+  color: #ffc094;
 }
 
 //本地设置相关
@@ -133,13 +130,105 @@ main.ant-layout-content.css-dev-only-do-not-override-12jzuas {
   width: 0;
   background-color: transparent;
 }
-.list-item-clear{
+.list-item-clear {
   display: none;
 }
-.list-item{
+.list-item {
   user-select: none;
 }
 .list-item:hover .list-item-clear {
   display: block;
-  color:#ff4d4f
+  color: #ff4d4f;
+}
+
+//歌词页面：
+.lrc-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(10px);
+  background-color: rgba(71, 71, 71, 0.8);
+  padding: 5% 5% 10% 5%;
+}
+
+.lrc-overlay-content {
+  display: fixed;
+  height: 100%;
+}
+
+.lrc-left {
+  float: left;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lrc-left-picture {
+  width: 250px;
+  border-radius: 5px;
+}
+
+.lrc-right {
+  float: right;
+  height: 100%;
+  width: 50%;
+}
+
+.lrc-right-lrc {
+  height: 100%;
+  width: 50%;
+  overflow: auto;
+}
+
+.lrc-right-lrc::-webkit-scrollbar {
+  width: 0;
+  background-color: transparent;
+}
+
+//页脚
+.footer {
+  width: 100%;
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-content {
+  height: 55px;
+  width: 100%;
+  display: inline-flex;
+}
+
+.footer-left {
+  float: left;
+  width: 200px;
+  display: inline-flex;
+  padding: 0 10px 0 10px;
+  align-items: center;
+  justify-content: space-between;
+  border-right: 1px solid rgb(222, 222, 222);
+}
+
+.footer-right {
+  flex-grow: 1;
+  display: inline-flex;
+  padding: 5px;
+}
+
+.footer-right-picture {
+  width: 45px;
+  text-align: center;
+}
+.footer-right-progress {
+  flex-grow: 1;
+  padding: 0 5px 0 5px;
+}
+.footer-right-time {
+  float: right;
 }

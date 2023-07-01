@@ -1,10 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Popover, Progress, Slider, Tooltip} from "antd";
-import icon from '/icons/music256x256.png';
+import React, { useEffect, useRef, useState } from "react";
+import { Popover, Progress, Slider, Tooltip } from "antd";
+import icon from "/icons/music256x256.png";
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
-import {listType, playModeEnum} from "@/enums/enums";
+import { listType, playModeEnum } from "@/enums/enums";
 import {
   Favorite,
   FavoriteBorder,
@@ -16,18 +16,17 @@ import {
   SkipNext,
   SkipPrevious,
   VolumeOff,
-  VolumeUp
-} from '@mui/icons-material';
+  VolumeUp,
+} from "@mui/icons-material";
 
-const fs = window.fs
+const fs = window.fs;
 
 //播放模式枚举
 const IconMap = {
-  '单曲循环': <RepeatOne/>,
-  '列表循环': <Repeat/>,
-  '随机播放': <Shuffle/>,
+  单曲循环: <RepeatOne />,
+  列表循环: <Repeat />,
+  随机播放: <Shuffle />,
 };
-
 
 function MyFooter(props) {
   //当前歌曲元数据
@@ -60,31 +59,29 @@ function MyFooter(props) {
   //歌词组件的状态
   const [status, setStatus] = useState(false);
 
-
   useEffect(() => {
     const audioPlayer = audioRef.current;
 
-
     // 订阅事件
     eventManager.subscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
-
 
     const updateProgress = () => {
       const currentTime = audioPlayer.currentTime;
       const duration = audioPlayer.duration;
       const progressPercent = (currentTime / duration) * 100;
-      setCurrentTime(formatTime(currentTime))
+      setCurrentTime(formatTime(currentTime));
       setProgress(progressPercent);
       // 发布当前歌曲播放时间
-      eventManager.publish(pageEvent.CURRENT_TIME.value, currentTime)
+      eventManager.publish(pageEvent.CURRENT_TIME.value, currentTime);
 
       //播放完毕，根据播放类型决定如何继续
       if (currentTime === duration) {
-        if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
-          playMode: playModeRef.current,
-          listType: listType.LocalListLoop,
-          metadata: metadata.current
-        })
+        if (metadata.current)
+          eventManager.publish(pageEvent.NEXT.value, {
+            playMode: playModeRef.current,
+            listType: listType.LocalListLoop,
+            metadata: metadata.current,
+          });
       }
     };
 
@@ -95,47 +92,42 @@ function MyFooter(props) {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
     };
-
   }, [audioRef.current]);
 
-
   const handleEvent = (data) => {
-    metadata.current = data
+    metadata.current = data;
     // 处理事件
-    let {title, picture, path, duration} = data
+    let { title, picture, path, duration } = data;
     //设置属性
     setTitle(title);
-    setDuration(duration)
+    setDuration(duration);
     if (picture) {
-      const fileUrl = `file://${picture}`
-      setPicture(fileUrl)
+      const fileUrl = `file://${picture}`;
+      setPicture(fileUrl);
     }
     //播放音乐
-    play(path)
-    setPlayState(true)
+    play(path);
+    setPlayState(true);
   };
-
 
   function play(path) {
     fs.readFile(path, (error, data) => {
       if (error) {
-        console.error('Error reading file:', error);
+        console.error("Error reading file:", error);
         return;
       }
-      const audioBlob = new Blob([data], {type: 'audio/mp3'});
+      const audioBlob = new Blob([data], { type: "audio/mp3" });
       audioRef.current.src = URL.createObjectURL(audioBlob);
       audioRef.current.play();
     });
   }
 
   const handleVolumeChange = (value) => {
-    setVolume(value)
-    audioRef.current.volume = value / 100
+    setVolume(value);
+    audioRef.current.volume = value / 100;
   };
 
-  const popoverContent = (
-    <Slider vertical style={{height: '80px'}} value={volume} onChange={handleVolumeChange}/>
-  );
+  const popoverContent = <Slider vertical style={{ height: "80px" }} value={volume} onChange={handleVolumeChange} />;
 
   //播放，暂停
   const handlePlayPauseClick = () => {
@@ -149,26 +141,22 @@ function MyFooter(props) {
     }
   };
 
-
-  const handleFavorite = () => {
-
-  };
+  const handleFavorite = () => {};
 
   const handlePlayMode = () => {
     if (playMode === playModeEnum.LIST_LOOP) {
-      setPlayMode(playModeEnum.SINGLE_LOOP)
-      playModeRef.current = playModeEnum.SINGLE_LOOP
+      setPlayMode(playModeEnum.SINGLE_LOOP);
+      playModeRef.current = playModeEnum.SINGLE_LOOP;
     }
     if (playMode === playModeEnum.SINGLE_LOOP) {
-      setPlayMode(playModeEnum.RANDOM)
-      playModeRef.current = playModeEnum.RANDOM
+      setPlayMode(playModeEnum.RANDOM);
+      playModeRef.current = playModeEnum.RANDOM;
     }
     if (playMode === playModeEnum.RANDOM) {
-      setPlayMode(playModeEnum.LIST_LOOP)
-      playModeRef.current = playModeEnum.LIST_LOOP
+      setPlayMode(playModeEnum.LIST_LOOP);
+      playModeRef.current = playModeEnum.LIST_LOOP;
     }
-  }
-
+  };
 
   /**
    * 进度条点击
@@ -177,10 +165,10 @@ function MyFooter(props) {
   const handleClick = (e) => {
     if (audioRef) {
       const progressBar = progressRef.current.getBoundingClientRect();
-      const clickX = e.clientX - progressBar.left
-      const progressBarWidth = progressBar.width
-      const clickPercentage = clickX / progressBarWidth
-      const audioPlayer = audioRef.current
+      const clickX = e.clientX - progressBar.left;
+      const progressBarWidth = progressBar.width;
+      const clickPercentage = clickX / progressBarWidth;
+      const audioPlayer = audioRef.current;
       audioRef.current.currentTime = audioPlayer.duration * clickPercentage;
     }
   };
@@ -188,77 +176,77 @@ function MyFooter(props) {
     const newStatus = !status;
     setStatus(newStatus);
     props.onStatusChange(newStatus);
-  }
+  };
+
+  //上一首
+  const skipPrevious = () => {
+    if (metadata.current)
+      eventManager.publish(pageEvent.PRE.value, {
+        playMode: playModeRef.current,
+        listType: listType.LocalListLoop,
+        metadata: metadata.current,
+      });
+  };
+
+  //下一首
+  const skipNext = () => {
+    if (metadata.current)
+      eventManager.publish(pageEvent.NEXT.value, {
+        playMode: playModeRef.current,
+        listType: listType.LocalListLoop,
+        metadata: metadata.current,
+      });
+  };
 
   return (
-    <div style={{height: '55px', width: "100%", display: "inline-flex"}}>
+    <div className="footer-content">
       {/*左侧播放按钮栏*/}
-      <span
-        style={{
-          float: "left",
-          width: "200px",
-          display: "inline-flex",
-          padding: "0 10px 0 10px",
-          alignItems: 'center',
-          justifyContent: "space-between",
-          borderRight: "1px solid rgb(222, 222, 222)",
-        }}
-      >
-       <SkipPrevious onClick={() => {
-         if (metadata.current) eventManager.publish(pageEvent.PRE.value, {
-           playMode: playModeRef.current,
-           listType: listType.LocalListLoop,
-           metadata: metadata.current
-         })
-       }}/>
-        {playState ? (
-          <Pause onClick={handlePlayPauseClick}/>
-        ) : (
-          <PlayArrow onClick={handlePlayPauseClick}/>
-        )}
-        <SkipNext onClick={() => {
-          if (metadata.current) eventManager.publish(pageEvent.NEXT.value, {
-            playMode: playModeRef.current,
-            listType: listType.LocalListLoop,
-            metadata: metadata.current
-          })
-        }}/>
-          <Popover
-            content={popoverContent}
-            trigger="click"
-          >
-          {volume === 0 ? (
-            <VolumeOff/>
-          ) : (
-            <VolumeUp/>
-          )}
+      <span className="footer-left">
+        <SkipPrevious
+          onClick={() => {
+            skipPrevious;
+          }}
+        />
+        {playState ? <Pause onClick={handlePlayPauseClick} /> : <PlayArrow onClick={handlePlayPauseClick} />}
+        <SkipNext onClick={() => {skipNext}} />
+        <Popover content={popoverContent} trigger="click">
+          {volume === 0 ? <VolumeOff /> : <VolumeUp />}
         </Popover>
         {/* 播放模式图标 */}
-        <span style={{display: "inline-flex", alignItems: 'center',}} onClick={handlePlayMode}>
-           <Tooltip color={"white"} title={<span style={{color: 'black'}}>{playMode}</span>}>
-              {IconMap[playMode]}
-           </Tooltip>
+        <span style={{ display: "inline-flex", alignItems: "center" }} onClick={handlePlayMode}>
+          <Tooltip color={"white"} title={<span style={{ color: "black" }}>{playMode}</span>}>
+            {IconMap[playMode]}
+          </Tooltip>
         </span>
         {/*我喜欢的图标*/}
         {favorite ? (
-          <Favorite sx={{color: '#FF9B9B'}} onClick={handleFavorite}/>
+          <Favorite sx={{ color: "#FF9B9B" }} onClick={handleFavorite} />
         ) : (
-          <FavoriteBorder onClick={handleFavorite}/>
+          <FavoriteBorder onClick={handleFavorite} />
         )}
       </span>
 
-      <span style={{flexGrow: 1, display: "inline-flex", padding: '5px'}}>
-        <div className='imgCenter' style={{width: "45px", textAlign: "center"}} onClick={openMusic}>
-          <img width={"100%"} src={picture} alt={icon} style={{borderRadius: "2px"}}/>
+      {/* 右侧音乐信息 */}
+      <span className="footer-right">
+        <div className="footer-right-picture" onClick={openMusic}>
+          <img width={"100%"} src={picture} alt={icon}  className="img"/>
         </div>
-        <span style={{flexGrow: 1, padding: "0 5px 0 5px"}}>
+        <span className="footer-right-progress">
           <span>{title}</span>
-          <span style={{float: "right"}}>{currentTime}/{duration}</span>
-          <Progress percent={progress} onClick={handleClick} size={"small"} ref={progressRef} className={"widthMax"}
-                    showInfo={false}/>
+          <span className="footer-right-time">
+            {currentTime}/{duration}
+          </span>
+          <Progress
+            percent={progress}
+            onClick={handleClick}
+            size={"small"}
+            ref={progressRef}
+            className={"widthMax"}
+            showInfo={false}
+          />
         </span>
 
-      <audio ref={audioRef} id="audioPlayer"></audio>
+        <audio ref={audioRef} id="audioPlayer"></audio>
       </span>
     </div>
   );

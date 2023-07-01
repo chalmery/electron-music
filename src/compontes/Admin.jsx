@@ -40,7 +40,7 @@ export default function Admin() {
             <CacheRoute path="/love" component={Love}/>
           </CacheSwitch>
         </Content>
-        <Footer style={{width: "100%", position: "absolute", zIndex: 3, bottom: 0, padding: 0, margin: 0}}>
+        <Footer className="footer">
           <MyFooter onStatusChange={handleStatusChange}/>
         </Footer>
       </Layout>
