@@ -18,10 +18,7 @@
     artifactName: "${productName}-win-${version}.${ext}",
     target: [
       {
-        target: [
-          "dir",
-          "zip"
-        ],
+        target: "zip",
         arch: [
           "x64"
         ]
