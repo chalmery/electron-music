@@ -22,9 +22,13 @@ jobs:
 
       - name: Install
         run: npm install
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS }}
 
       - name: Build
         run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS }}
 
       # step5: 清理
       - name: Cleanup artifacts
@@ -42,6 +46,8 @@ jobs:
         with:
           name: ${{ matrix.os }}
           path: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS }}
 
       # step7: 发布
       - name: Release
