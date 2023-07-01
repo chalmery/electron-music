@@ -27,7 +27,7 @@ jobs:
       # step5: 清理
       - name: cleanup artifacts
         run: |
-          npx rimraf "release/!(*.AppImage|*.tar.gz|*.zip)"
+          npx rimraf "release/^!(*.AppImage|*.tar.gz|*.zip)"
       # step6: 上传
       - name: upload artifacts
         uses: actions/upload-artifact@v2
