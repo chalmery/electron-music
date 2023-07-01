@@ -56,7 +56,7 @@ export default function LocalConf() {
   //同步数据
   const enterLoading = () => {
     setLoading(true);
-    electron.ipcRenderer.send(localSetting.SYNC_DATA.value, localSetting.SYNC_DATA.value);
+    electron.ipcRenderer.send(localSetting.SYNC_DATA.value, localDir);
   };
 
   //传递打开本地文件选择器选项
