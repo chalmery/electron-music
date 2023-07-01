@@ -25,22 +25,20 @@ jobs:
 
       - name: Build
         run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            npm run build --cmd
-          else
-            npm run build
-          fi
+          npm run build --cmd
+        if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.actions }}
 
       # step5: 清理
       - name: Cleanup artifacts
         run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            Get-ChildItem -Path "release" -Exclude *.AppImage, *.tar.gz, *.zip | Remove-Item -Force -Recurse
-          else
-            npx rimraf "release/!(*.AppImage|*.tar.gz|*.zip)"
-          fi
+          Get-ChildItem -Path "release" -Exclude *.zip | Remove-Item -Force -Recurse
+        if: matrix.os == 'windows-latest'
+
+      - name: Cleanup artifacts
+        run: npx rimraf "release/^!(*.AppImage|*.tar.gz|*.zip)"
+        if: matrix.os == 'ubuntu-latest'
 
       # step6: 上传
       - name: Upload artifacts
