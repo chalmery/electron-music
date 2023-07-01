@@ -21,7 +21,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-:where(.css-dev-only-do-not-override-k7429z).ant-layout .ant-layout-sider {
+.ant-layout .ant-layout-sider {
   background: none;
 }
 
@@ -33,7 +33,7 @@ code {
   width: 100%;
 }
 
-:where(.css-dev-only-do-not-override-k7429z).ant-menu-light.ant-menu-root.ant-menu-vertical {
+.ant-menu-light.ant-menu-root.ant-menu-vertical {
   border-right: 0;
 }
 
@@ -65,13 +65,13 @@ code {
   border: 0;
 }
 
-:where(.css-dev-only-do-not-override-12jzuas).ant-layout .ant-layout-sider {
+.ant-layout .ant-layout-sider {
   background-color: #ffffff;
   border-right: 1px solid rgb(222, 222, 222);
   height: 100vh;
 }
 
-:where(.css-12jzuas).ant-layout .ant-layout-sider {
+.ant-layout .ant-layout-sider{
   background-color: #ffffff;
 }
 
