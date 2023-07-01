@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - '*.*.*'
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -13,12 +14,14 @@ jobs:
         os: [ ubuntu-latest, windows-latest ]
     steps:
       - uses: actions/checkout@v3
+
       - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
           node-version: "20.x"
+
       - name: Install
-        run: npm ci
+        run: npm install
 
       - name: Build
         run: |
@@ -36,7 +39,7 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then
             Get-ChildItem -Path "release" -Exclude *.AppImage, *.tar.gz, *.zip | Remove-Item -Force -Recurse
           else
-            npx rimraf "release/^!(*.AppImage|*.tar.gz|*.zip)"
+            npx rimraf "release/!(*.AppImage|*.tar.gz|*.zip)"
           fi
 
       # step6: 上传
