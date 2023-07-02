@@ -1,5 +1,5 @@
 //本地设置
-let localSetting = {
+const localSetting = {
   //本地设置页面相关事件
   LOCAL_CONF_INIT: { label: "本地设置页面初始化", value: "localConfInit" },
   OPEN_DIR: { label: "选择目录", value: "openDir" },

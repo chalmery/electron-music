@@ -1,7 +1,6 @@
 import { ipcMain } from "electron";
 import localSetting from "../../lib/event";
-import { access, readdirSync, statSync, writeFile } from "fs";
-import { save } from "../../lib/fs";
+import { save,getPath,access,readSync,statSync} from "../../lib/fs";
 import dataName from "../../lib/dataName";
 import path from "path";
 import crypto from "crypto";
@@ -13,7 +12,7 @@ const fileTypeList = ["FLAC", "flac", "MP3", "mp3", "ape", "APE", "MPEG", "Ogg"]
 
 function readDir(dir, fileList) {
   try {
-    let files = readdirSync(dir, "utf-8");
+    let files = readSync(dir, "utf-8");
     if (files === null || files === undefined) {
       return;
     }
@@ -55,13 +54,13 @@ function savePicture(data, value, metadata, hashCode) {
   let imageMimeType = data.common.picture[0].format;
   let format = mime.extension(imageMimeType);
 
-  let picturePath = path.join(__dirname, "../" + hashCode + "." + format);
+  let picturePath = getPath(hashCode + "." + format)
   metadata.picture = picturePath;
 
   //文件不存在则写入
   access(picturePath, (err) => {
     if (err) {
-      writeFile(picturePath, picture, (err) => {});
+      save(picturePath, picture);
     }
   });
 }

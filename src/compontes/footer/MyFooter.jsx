@@ -20,7 +20,6 @@ import {
 } from "@mui/icons-material";
 
 const fs = window.fs;
-
 import dataEvent from "../../../electron/lib/event";
 
 //播放模式枚举

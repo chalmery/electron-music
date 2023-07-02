@@ -1,17 +1,13 @@
 import {ipcMain} from "electron";
 import dataEvent from "../../lib/event";
 import localSetting from "../../lib/event";
-import fs from "fs";
-import path from "path";
+import {read } from "../../lib/fs";
 
 
 const LrcAction = () => {
   ipcMain.on(dataEvent.LRC.value, (event, data) => {
-    let picturePath = path.join(__dirname, '../' + data.hashCode + '.lrc')
-    fs.readFile(picturePath, 'utf-8', (err, data) => {
-      if (err) {
-        console.log(err)
-      }
+    let fileName = data.hashCode + '.lrc';
+    read(fileName, (data) => {
       event.reply(localSetting.LRC_CALLBACK.value, parseLrc(data))
     })
   })

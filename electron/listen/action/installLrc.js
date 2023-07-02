@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 import localSetting from "../../lib/event";
 import path from "path";
 import { makeGetRequest } from "../../lib/http";
-import { saveBase, readBase } from "../../lib/fs";
+import { save, read } from "../../lib/fs";
 import dataName from "../../lib/dataName";
 
 /**
@@ -39,8 +39,8 @@ const executeRequests = (musicList, index, callback) => {
           .then((data) => {
             let lrc = data?.lrc?.lyric;
             if (lrc) {
-              let picturePath = path.join(__dirname, "../" + metadata.hashCode + ".lrc");
-              saveBase(picturePath, lrc, () => {
+              let fileName = metadata.hashCode + ".lrc";
+              save(fileName, lrc, () => {
                 console.log(`调用接口完成 ${index}`);
                 // 递归调用，在指定的间隔后执行下一个请求
                 setTimeout(() => {
@@ -102,8 +102,7 @@ const getMusicId = (songs, metadata) => {
 const installLrc = () => {
   ipcMain.on(localSetting.INSTALL_LRC.value, (event, data) => {
     //1 获取全部歌曲信息
-    let metdaataPath = path.join(__dirname, "../",dataName.META_DATA.value,".json");
-    readBase(metdaataPath, (data) => {
+    read(dataName.META_DATA.value, (data) => {
       let metadataList = JSON.parse(data);
       const dataArray = metadataList.map((metadata) => metadata.value);
       const valueList = [].concat(...dataArray);

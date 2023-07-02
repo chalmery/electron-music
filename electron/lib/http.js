@@ -1,13 +1,15 @@
+import {CharConstants,BizConstants} from "../constants/constant";
+
 const https = require("https")
 
 function makeGetRequest(url) {
   return new Promise((resolve, reject) => {
     const req = https.get(url, (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
+      let data = CharConstants.STRING_EMPTY;
+      res.on(BizConstants.DATA, (chunk) => {
         data += chunk;
       });
-      res.on('end', () => {
+      res.on(BizConstants.END, () => {
         try {
           let jsonData = JSON.parse(data);
           resolve(jsonData);
@@ -17,7 +19,7 @@ function makeGetRequest(url) {
       });
     });
 
-    req.on('error', (error) => {
+    req.on(BizConstants.ERROR, (error) => {
       reject(error);
     });
 
