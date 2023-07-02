@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Layout, Menu, Table } from "antd";
+import { Layout, Dropdown, Table } from "antd";
 import dataEvent from "../../../electron/lib/event";
 import localSetting from "../../../electron/lib/event";
 import eventManager from "../../event/eventManager";
@@ -22,6 +22,25 @@ export default function Local() {
       title: "文件夹",
       dataIndex: "label",
       key: "label",
+    },
+  ];
+
+  const items = [
+    {
+      label: "播放",
+      key: "1",
+    },
+    {
+      label: "添加到播放列表",
+      key: "2",
+    },
+    {
+      label: "打开文件所在目录",
+      key: "3",
+    },
+    {
+      label: "收藏到歌单",
+      key: "4",
     },
   ];
 
@@ -159,20 +178,29 @@ export default function Local() {
       <Content className="scrollable-container auto heightMax">
         {dataSource.length > 0 && (
           <>
-            <Table
-              onRow={(record) => {
-                return {
-                  onClick: () => {
-                    tableRowClick(record);
-                  },
-                };
+            <Dropdown
+              menu={{
+                items,
               }}
-              rowClassName={rowClassName}
-              size={"small"}
-              columns={columns}
-              pagination={false}
-              dataSource={dataSource}
-            />
+              trigger={["contextMenu"]}
+            >
+              <div>
+              <Table
+                onRow={(record) => {
+                  return {
+                    onClick: () => {
+                      tableRowClick(record);
+                    },
+                  };
+                }}
+                rowClassName={rowClassName}
+                size={"small"}
+                columns={columns}
+                pagination={false}
+                dataSource={dataSource}
+              />
+              </div>
+            </Dropdown>
             <div style={{ height: "55px" }}></div>
           </>
         )}

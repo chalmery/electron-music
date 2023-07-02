@@ -82,6 +82,15 @@ function readSync(fileName) {
   return file;
 }
 
+//同步读目录
+function readdirSync(path) {
+  let file = null;
+  try {
+    file = fs.readdirSync(path, CharConstants.UTF_8);
+  } catch (err) {}
+  return file;
+}
+
 function access(fileName,callback){
   fs.access(fileName,callback)
 }
@@ -91,4 +100,4 @@ function statSync(fileName){
 }
 
 
-export { save, saveSync, read, readSync, getPath,access,statSync,readByPath};
+export { save, saveSync, read, readSync, getPath,access,statSync,readByPath,readdirSync};

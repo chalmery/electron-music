@@ -1,10 +1,11 @@
 import { ipcMain } from "electron";
 import localSetting from "../../lib/event";
-import { save,getPath,access,readSync,statSync} from "../../lib/fs";
+import { save, getPath, access, readdirSync, statSync } from "../../lib/fs";
 import dataName from "../../lib/dataName";
 import path from "path";
 import crypto from "crypto";
 import mime from "mime-types";
+import { CharConstants } from "../../constants/constant";
 
 const { parseFile } = require("music-metadata");
 
@@ -12,7 +13,7 @@ const fileTypeList = ["FLAC", "flac", "MP3", "mp3", "ape", "APE", "MPEG", "Ogg"]
 
 function readDir(dir, fileList) {
   try {
-    let files = readSync(dir, "utf-8");
+    let files = readdirSync(dir);
     if (files === null || files === undefined) {
       return;
     }
@@ -54,13 +55,14 @@ function savePicture(data, value, metadata, hashCode) {
   let imageMimeType = data.common.picture[0].format;
   let format = mime.extension(imageMimeType);
 
-  let picturePath = getPath(hashCode + "." + format)
+  let pictureName = hashCode + CharConstants.DOT + format;
+  let picturePath = getPath(pictureName);
   metadata.picture = picturePath;
 
   //文件不存在则写入
   access(picturePath, (err) => {
     if (err) {
-      save(picturePath, picture);
+      save(pictureName, picture);
     }
   });
 }
@@ -72,12 +74,15 @@ function savePicture(data, value, metadata, hashCode) {
  * @param event electron 事件
  */
 function parseMetaData(fileList, callback, event) {
+  if (fileList.length === 0) {
+    //回调前端
+    callback(fileList, event);
+  }
   let metaList = [];
   let mapSize = fileList.length;
   let key = 1;
 
   let musicList = [];
-
   //循环解析音乐元数据
   fileList.forEach((value) => {
     let promise = parseFile(value.filePath);
@@ -125,6 +130,10 @@ function parseMetaData(fileList, callback, event) {
  * @param event
  */
 function call(fileList, event) {
+  if (fileList.length === 0) {
+    event.reply(localSetting.SYNC_DATA_CALLBACK.value, localSetting.SYNC_DATA_CALLBACK.value);
+    return;
+  }
   const groupedArray = Object.values(
     fileList.reduce((acc, obj) => {
       const { key, value } = obj;
