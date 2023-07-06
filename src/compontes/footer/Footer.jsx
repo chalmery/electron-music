@@ -29,7 +29,7 @@ const IconMap = {
   随机播放: <Shuffle />,
 };
 
-function MyFooter(props) {
+function Footer(props) {
   //当前歌曲元数据
   let metadata = useRef(null);
   //标题
@@ -267,4 +267,4 @@ function MyFooter(props) {
   );
 }
 
-export default MyFooter;
+export default Footer;

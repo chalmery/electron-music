@@ -6,7 +6,7 @@ import Local from "@/compontes/center/Local";
 import Online from "@/compontes/center/Online";
 import {CacheRoute, CacheSwitch} from "react-router-cache-route";
 import {Layout} from "antd";
-import MyFooter from "@/compontes/footer/MyFooter";
+import MusicBar from "@/compontes/footer/Footer";
 import Playlist from "@/compontes/center/Playlist";
 import Love from "@/compontes/center/Love";
 import Lyrics from "@/compontes/footer/Lyrics";
@@ -41,7 +41,7 @@ export default function Admin() {
           </CacheSwitch>
         </Content>
         <Footer className="footer">
-          <MyFooter onStatusChange={handleStatusChange}/>
+          <MusicBar onStatusChange={handleStatusChange}/>
         </Footer>
       </Layout>
     </div>

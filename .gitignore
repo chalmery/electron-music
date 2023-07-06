@@ -28,3 +28,4 @@ yarn.lock
 *.sln
 *.sw?
 
+pnpm-lock.yaml
