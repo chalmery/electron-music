@@ -45,7 +45,10 @@ function createWindow() {
     icon: [
       join(process.env.PUBLIC, "icons/music.png"),
       join(process.env.PUBLIC, "icons/music@2x.png"),
+      join(process.env.PUBLIC, "icons/music@3x.png"),
       join(process.env.PUBLIC, "icons/music@4x.png"),
+      join(process.env.PUBLIC, "icons/music@5x.png"),
+      join(process.env.PUBLIC, "icons/music@6x.png"),
     ],
     webPreferences: {
       preload,
@@ -87,7 +90,7 @@ function loadFile() {
 
 app.whenReady().then(() => {
   createWindow();
-  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, "/icons/music.png"));
+  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, "/icons/music@6x.png"));
   const resizedIcon = icon.resize({ width: 128, height: 128 });
   let tray = new Tray(resizedIcon);
   const contextMenu = Menu.buildFromTemplate([
