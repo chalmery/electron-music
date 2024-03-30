@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Popover, Progress, Slider, Tooltip } from "antd";
+import React, {useEffect, useRef, useState} from "react";
+import {Popover, Progress, Slider, Tooltip} from "antd";
 import icon from "/icons/music@6x.png";
 import eventManager from "../../event/eventManager";
-import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
-import { listType, playModeEnum } from "@/enums/enums";
+import {listType, playModeEnum} from "@/enums/enums";
 import {
   Favorite,
   FavoriteBorder,
@@ -18,15 +17,15 @@ import {
   VolumeOff,
   VolumeUp,
 } from "@mui/icons-material";
-
 const fs = window.fs;
-import dataEvent from "../../../electron/lib/event";
+const dataEvent = window.dataEvent;
+const utils = window.utils;
 
 //播放模式枚举
 const IconMap = {
-  单曲循环: <RepeatOne />,
-  列表循环: <Repeat />,
-  随机播放: <Shuffle />,
+  单曲循环: <RepeatOne/>,
+  列表循环: <Repeat/>,
+  随机播放: <Shuffle/>,
 };
 
 function Footer(props) {
@@ -70,7 +69,7 @@ function Footer(props) {
       const currentTime = audioPlayer.currentTime;
       const duration = audioPlayer.duration;
       const progressPercent = (currentTime / duration) * 100;
-      setCurrentTime(formatTime(currentTime));
+      setCurrentTime(utils.formatTime(currentTime));
       setProgress(progressPercent);
       // 发布当前歌曲播放时间
       eventManager.publish(pageEvent.CURRENT_TIME.value, currentTime);
@@ -89,15 +88,15 @@ function Footer(props) {
     audioPlayer.addEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
 
 
-    electron.ipcRenderer.on(dataEvent.NEXT.value, (event, data) => {
+    electron.ipcRenderer.on(dataEvent.eventName.NEXT.value, (event, data) => {
       skipNext()
     });
 
-    electron.ipcRenderer.on(dataEvent.PRE.value, (event, data) => {
+    electron.ipcRenderer.on(dataEvent.eventName.PRE.value, (event, data) => {
       skipPrevious()
     });
 
-    electron.ipcRenderer.on(dataEvent.PLAY.value, (event, data) => {
+    electron.ipcRenderer.on(dataEvent.eventName.PLAY.value, (event, data) => {
       handlePlayPauseClick()
     });
 
@@ -105,16 +104,16 @@ function Footer(props) {
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
-      electron.ipcRenderer.removeAllListeners(dataEvent.NEXT.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.PRE.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.PLAY.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.NEXT.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.PRE.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.PLAY.value);
     };
   }, [audioRef.current]);
 
   const handleEvent = (data) => {
     metadata.current = data;
     // 处理事件
-    let { title, picture, path, duration } = data;
+    let {title, picture, path, duration} = data;
     //设置属性
     setTitle(title);
     setDuration(duration);
@@ -133,7 +132,7 @@ function Footer(props) {
         console.error("Error reading file:", error);
         return;
       }
-      const audioBlob = new Blob([data], { type: "audio/mp3" });
+      const audioBlob = new Blob([data], {type: "audio/flac"});
       audioRef.current.src = URL.createObjectURL(audioBlob);
       audioRef.current.play();
     });
@@ -144,7 +143,7 @@ function Footer(props) {
     audioRef.current.volume = value / 100;
   };
 
-  const popoverContent = <Slider vertical style={{ height: "80px" }} value={volume} onChange={handleVolumeChange} />;
+  const popoverContent = <Slider vertical style={{height: "80px"}} value={volume} onChange={handleVolumeChange}/>;
 
   //播放，暂停
   const handlePlayPauseClick = () => {
@@ -159,7 +158,8 @@ function Footer(props) {
     }
   };
 
-  const handleFavorite = () => {};
+  const handleFavorite = () => {
+  };
 
   const handlePlayMode = () => {
     if (playMode === playModeEnum.LIST_LOOP) {
@@ -220,30 +220,30 @@ function Footer(props) {
     <div className="footer-content">
       {/*左侧播放按钮栏*/}
       <span className="footer-left">
-        <SkipPrevious onClick={skipPrevious} />
-        {playStateRef.current ? <Pause onClick={handlePlayPauseClick} /> : <PlayArrow onClick={handlePlayPauseClick} />}
-        <SkipNext onClick={skipNext} />
+        <SkipPrevious onClick={skipPrevious}/>
+        {playStateRef.current ? <Pause onClick={handlePlayPauseClick}/> : <PlayArrow onClick={handlePlayPauseClick}/>}
+        <SkipNext onClick={skipNext}/>
         <Popover content={popoverContent} trigger="click">
-          {volume === 0 ? <VolumeOff /> : <VolumeUp />}
+          {volume === 0 ? <VolumeOff/> : <VolumeUp/>}
         </Popover>
         {/* 播放模式图标 */}
-        <span style={{ display: "inline-flex", alignItems: "center" }} onClick={handlePlayMode}>
-          <Tooltip color={"white"} title={<span style={{ color: "black" }}>{playMode}</span>}>
+        <span style={{display: "inline-flex", alignItems: "center"}} onClick={handlePlayMode}>
+          <Tooltip color={"white"} title={<span style={{color: "black"}}>{playMode}</span>}>
             {IconMap[playMode]}
           </Tooltip>
         </span>
         {/*我喜欢的图标*/}
         {favorite ? (
-          <Favorite sx={{ color: "#FF9B9B" }} onClick={handleFavorite} />
+          <Favorite sx={{color: "#FF9B9B"}} onClick={handleFavorite}/>
         ) : (
-          <FavoriteBorder onClick={handleFavorite} />
+          <FavoriteBorder onClick={handleFavorite}/>
         )}
       </span>
 
       {/* 右侧音乐信息 */}
       <span className="footer-right">
         <div className="footer-right-picture" onClick={openMusic}>
-          <img width={"100%"} src={picture} alt={icon} className="img" />
+          <img width={"100%"} src={picture} alt={icon} className="img"/>
         </div>
         <span className="footer-right-progress">
           <span>{title}</span>

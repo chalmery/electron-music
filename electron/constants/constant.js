@@ -1,3 +1,6 @@
+/**
+ * 字符串常量
+ */
 const CharConstants = {
   SLASH: "/",
   DOT: ".",
@@ -8,6 +11,9 @@ const CharConstants = {
   STRING_EMPTY: "",
 };
 
+/**
+ * 业务相关常量
+ */
 const BizConstants = {
   START: "start",
   END: "end",

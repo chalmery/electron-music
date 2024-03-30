@@ -1,15 +1,13 @@
 import { ipcMain } from "electron";
-import localSetting from "../../lib/event";
-import { save, getPath, access, readdirSync, statSync } from "../../lib/fs";
-import dataName from "../../lib/dataName";
+import {eventName} from "../../lib/metadata/event";
+import { save, access, readdirSync, statSync } from "../../lib/fs";
+import {fileName, fileTypeList, getPath} from "../../lib/metadata/metadata";
 import path from "path";
-import crypto from "crypto";
 import mime from "mime-types";
 import { CharConstants } from "../../constants/constant";
+import {formatTime, getMd5Value} from "../../lib/util/utils";
 
 const { parseFile } = require("music-metadata");
-
-const fileTypeList = ["FLAC", "flac", "MP3", "mp3", "ape", "APE", "MPEG", "Ogg"];
 
 function readDir(dir, fileList) {
   try {
@@ -24,7 +22,7 @@ function readDir(dir, fileList) {
         fileList.push({
           dir: dir,
           filePath: filePath,
-          hashCode: crypto.createHash("md5").update(filePath).digest("hex"),
+          hashCode: getMd5Value(filePath),
         });
       } else {
         readDir(filePath, fileList);
@@ -82,7 +80,6 @@ function parseMetaData(fileList, callback, event) {
   let mapSize = fileList.length;
   let key = 1;
 
-  let musicList = [];
   //循环解析音乐元数据
   fileList.forEach((value) => {
     let promise = parseFile(value.filePath);
@@ -105,7 +102,6 @@ function parseMetaData(fileList, callback, event) {
           if (data.common.picture !== undefined && data.common.picture.length !== 0) {
             savePicture(data, value, metadata, value.hashCode);
           }
-          musicList.push(metadata);
           metaList.push({ key: value.dir, value: metadata });
         }
       })
@@ -131,7 +127,7 @@ function parseMetaData(fileList, callback, event) {
  */
 function call(fileList, event) {
   if (fileList.length === 0) {
-    event.reply(localSetting.SYNC_DATA_CALLBACK.value, localSetting.SYNC_DATA_CALLBACK.value);
+    event.reply(eventName.SYNC_DATA_CALLBACK.value, eventName.SYNC_DATA_CALLBACK.value);
     return;
   }
   const groupedArray = Object.values(
@@ -147,16 +143,16 @@ function call(fileList, event) {
   //排序
   groupedArray.sort((a, b) => a.label.localeCompare(b.label));
 
-  save(dataName.META_DATA.value, JSON.stringify(groupedArray), () => {
-    event.reply(localSetting.SYNC_DATA_CALLBACK.value, localSetting.SYNC_DATA_CALLBACK.value);
+  save(fileName.META_DATA.value, JSON.stringify(groupedArray), () => {
+    event.reply(eventName.SYNC_DATA_CALLBACK.value, eventName.SYNC_DATA_CALLBACK.value);
   });
 }
 
 //同步数据
 const dataSyncAction = () => {
-  ipcMain.on(localSetting.SYNC_DATA.value, (event, data) => {
+  ipcMain.on(eventName.SYNC_DATA.value, (event, data) => {
     if (data === undefined || data === null) {
-      event.reply(localSetting.SYNC_DATA_CALLBACK.value, null);
+      event.reply(eventName.SYNC_DATA_CALLBACK.value, null);
       return;
     }
     //找这些目录的音乐
@@ -166,13 +162,6 @@ const dataSyncAction = () => {
   });
 };
 
-function formatTime(seconds) {
-  const totalSeconds = Math.floor(seconds); // 取整数部分
-  const mins = Math.floor(totalSeconds / 60);
-  const secs = totalSeconds % 60;
-  const formattedMins = mins.toString().padStart(2, "0");
-  const formattedSecs = secs.toString().padStart(2, "0");
-  return `${formattedMins}:${formattedSecs}`;
-}
+
 
 export { dataSyncAction };

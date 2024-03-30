@@ -1,16 +1,12 @@
-import { log } from "console";
 import {CharConstants} from "../constants/constant";
-
-const path = require("path");
 const fs = require("fs");
-const { app } = require("electron");
+import {getPath} from "./metadata/metadata";
 
-//固定文件存储位置
-function getPath(fileName) {
-  return app.getPath("userData") + CharConstants.SLASH + fileName;
-}
 
-//创建文件夹
+/**
+ * 创建文件夹
+ * @param path
+ */
 function createDir(path) {
   fs.mkdir(path, (err) => {
     if (err) {
@@ -21,7 +17,12 @@ function createDir(path) {
   });
 }
 
-//存储文件
+/**
+ * 存储文件
+ * @param fileName
+ * @param data
+ * @param callback
+ */
 function save(fileName, data, callback) {
   fs.writeFile(getPath(fileName), data, (err) => {
     if (err) {
@@ -36,7 +37,11 @@ function save(fileName, data, callback) {
 }
 
 
-//同步存储文件
+/**
+ * 同步存储文件
+ * @param fileName
+ * @param data
+ */
 function saveSync(fileName, data) {
   fs.writeFileSync(getPath(fileName), data, (err) => {
     if (err) {
@@ -47,7 +52,11 @@ function saveSync(fileName, data) {
   });
 }
 
-//读文件
+/**
+ * 读文件 根据名称
+ * @param fileName
+ * @param callback
+ */
 function read(fileName, callback) {
   fs.readFile(getPath(fileName), CharConstants.UTF_8, (err, data) => {
     if (err) {
@@ -59,13 +68,16 @@ function read(fileName, callback) {
   });
 }
 
-//读文件
+/**
+ * 读文件 根据路径
+ * @param path 路径
+ * @param callback 回调
+ */
 function readByPath(path, callback) {
   fs.readFile(path, CharConstants.UTF_8, (err, data) => {
     if (err) {
       console.log(err);
     }
-    log(data)
     if (callback !== undefined) {
       callback(data);
     }
@@ -73,7 +85,11 @@ function readByPath(path, callback) {
 }
 
 
-//同步读文件
+/**
+ * 同步读文件
+ * @param fileName 路径
+ * @returns {null} 文件对象
+ */
 function readSync(fileName) {
   let file = null;
   try {
@@ -82,7 +98,11 @@ function readSync(fileName) {
   return file;
 }
 
-//同步读目录
+/**
+ * 同步读目录
+ * @param path 路径
+ * @returns {null} 文件对象
+ */
 function readdirSync(path) {
   let file = null;
   try {
@@ -91,13 +111,24 @@ function readdirSync(path) {
   return file;
 }
 
+/**
+ * 判断对象是否是文件
+ * @param fileName 文件名称
+ * @param callback 回调
+ */
 function access(fileName,callback){
   fs.access(fileName,callback)
 }
 
+/**
+ * 获取文件状态
+ * * 比如用于判断对象是否是文件
+ * @param fileName 文件名称
+ * @returns {Stats} 返回状态
+ */
 function statSync(fileName){
   return fs.statSync(fileName)
 }
 
 
-export { save, saveSync, read, readSync, getPath,access,statSync,readByPath,readdirSync};
+export { save, saveSync, read, readSync,access,statSync,readByPath,readdirSync};

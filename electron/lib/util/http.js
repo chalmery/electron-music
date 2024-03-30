@@ -1,7 +1,12 @@
-import {CharConstants,BizConstants} from "../constants/constant";
+import {CharConstants,BizConstants} from "../../constants/constant";
 
 const https = require("https")
 
+/**
+ * get请求函数
+ * @param url get请求地址
+ * @returns {Promise<unknown>} promise函数
+ */
 function makeGetRequest(url) {
   return new Promise((resolve, reject) => {
     const req = https.get(url, (res) => {

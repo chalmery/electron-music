@@ -1,6 +1,6 @@
 import eventManager from "@/event/eventManager";
 import pageEvent from "@/event/pageEvent";
-import dataEvent from "../../electron/lib/event";
+const dataEvent = window.dataEvent;
 
 /**
  * 本地播放列表循环
@@ -22,7 +22,7 @@ const localListLoop = (data) => {
     const nextMetaData = values[nextIndex];
     call(nextMetaData)
     eventManager.publish(pageEvent.CLICK_MUSIC.value, nextMetaData)
-    electron.ipcRenderer.send(dataEvent.LRC.value, nextMetaData)
+    electron.ipcRenderer.send(dataEvent.eventName.LRC.value, nextMetaData)
   }
 }
 

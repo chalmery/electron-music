@@ -12,7 +12,7 @@ const indexHtml = join(process.env.DIST, "index.html");
 const preload = join(__dirname, "../preload/index.js");
 
 import { listen } from "../listen/listen";
-import event from "../lib/event";
+import {eventName} from "../lib/metadata/event";
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -53,7 +53,7 @@ function createWindow() {
     webPreferences: {
       preload,
       webviewTag: true,
-      webSecurity: true, // 禁用安全策略
+      webSecurity: true, // 启用安全策略
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
@@ -97,19 +97,19 @@ app.whenReady().then(() => {
     {
       label: "播放/暂停",
       click: () => {
-        mainWindow.webContents.send(event.PLAY.value, event.PLAY.value);
+        mainWindow.webContents.send(eventName.PLAY.value, eventName.PLAY.value);
       },
     },
     {
       label: "上一首",
       click: () => {
-        mainWindow.webContents.send(event.PRE.value, event.PRE.value);
+        mainWindow.webContents.send(eventName.PRE.value, eventName.PRE.value);
       },
     },
     {
       label: "下一首",
       click: () => {
-        mainWindow.webContents.send(event.NEXT.value, event.NEXT.value);
+        mainWindow.webContents.send(eventName.NEXT.value, eventName.NEXT.value);
       },
     },
     {
