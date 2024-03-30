@@ -15,9 +15,9 @@ function domReady(condition = ['complete', 'interactive']) {
 
 domReady().then(() => {
     window.electron = require('electron')
-    console.log('electron fin...')
+    console.log('electron finish...')
     window.fs = require('fs')
-    console.log('electron fs fin...')
+    console.log('electron fs finish...')
 });
 
 
