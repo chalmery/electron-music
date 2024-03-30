@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import icon from "/icons/music256x256.png";
+import icon from "/icons/music@6x.png";
 import pageEvent from "@/event/pageEvent";
 import eventManager from "@/event/eventManager";
 import dataEvent from "../../../electron/lib/event";

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Popover, Progress, Slider, Tooltip } from "antd";
-import icon from "/icons/music256x256.png";
+import icon from "/icons/music@6x.png";
 import eventManager from "../../event/eventManager";
 import formatTime from "@/util/utils";
 import pageEvent from "@/event/pageEvent";
