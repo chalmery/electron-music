@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import icon from "/icons/music256x256.png";
+import icon from "/icons/music@6x.png";
 import pageEvent from "@/event/pageEvent";
 import eventManager from "@/event/eventManager";
-import dataEvent from "../../../electron/lib/event";
-import localSetting from "../../../electron/lib/event";
+const dataEvent = window.dataEvent;
 
 export default function Lyrics(props) {
   /**
@@ -30,7 +29,7 @@ export default function Lyrics(props) {
     eventManager.subscribe(pageEvent.CURRENT_TIME.value, handleCurrentTime);
 
     //查询歌词
-    electron.ipcRenderer.on(dataEvent.LRC_CALLBACK.value, (event, data) => {
+    electron.ipcRenderer.on(dataEvent.eventName.LRC_CALLBACK.value, (event, data) => {
       setLrc(data);
       lrcRef.current = data;
     });
@@ -38,7 +37,7 @@ export default function Lyrics(props) {
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       eventManager.unsubscribe(pageEvent.CURRENT_TIME.value, handleCurrentTime);
-      electron.ipcRenderer.removeAllListeners(localSetting.LRC_CALLBACK.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.LRC_CALLBACK.value);
     };
   }, []);
 

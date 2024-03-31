@@ -1,7 +1,7 @@
 import eventManager from "@/event/eventManager";
 import pageEvent from "@/event/pageEvent";
 import {listLoopRepository} from "@/strategy/repository/repository";
-import dataEvent from "../../electron/lib/event";
+const dataEvent = window.dataEvent;
 
 /**
  * 单曲循环
@@ -9,7 +9,7 @@ import dataEvent from "../../electron/lib/event";
  */
 const singleLoop = (data) => {
   eventManager.publish(pageEvent.CLICK_MUSIC.value, data.metadata)
-  electron.ipcRenderer.send(dataEvent.LRC.value, data.metadata)
+  electron.ipcRenderer.send(dataEvent.eventName.LRC.value, data.metadata)
 }
 
 function generateRandomNum(max, min) {
@@ -30,7 +30,7 @@ const random = (data) => {
     if (metadata) {
       call(metadata)
       eventManager.publish(pageEvent.CLICK_MUSIC.value, metadata)
-      electron.ipcRenderer.send(dataEvent.LRC.value, metadata)
+      electron.ipcRenderer.send(dataEvent.eventName.LRC.value, metadata)
     }
   }
 }

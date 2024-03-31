@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {Divider, Image, Menu, Modal} from 'antd';
 import Settings from "@/compontes/settings/Settings";
 import {withRouter} from "react-router-dom";
-import icon from '/icons/music256x256.png';
+import icon from '/icons/music@6x.png';
 
 import {CloudQueue, FavoriteBorder, Headset, LibraryMusic} from '@mui/icons-material';
 

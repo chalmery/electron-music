@@ -12,7 +12,7 @@ const indexHtml = join(process.env.DIST, "index.html");
 const preload = join(__dirname, "../preload/index.js");
 
 import { listen } from "../listen/listen";
-import event from "../lib/event";
+import {eventName} from "../lib/metadata/event";
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -46,11 +46,14 @@ function createWindow() {
       join(process.env.PUBLIC, "icons/music.png"),
       join(process.env.PUBLIC, "icons/music@2x.png"),
       join(process.env.PUBLIC, "icons/music@3x.png"),
+      join(process.env.PUBLIC, "icons/music@4x.png"),
+      join(process.env.PUBLIC, "icons/music@5x.png"),
+      join(process.env.PUBLIC, "icons/music@6x.png"),
     ],
     webPreferences: {
       preload,
       webviewTag: true,
-      webSecurity: false, // 禁用安全策略
+      webSecurity: true, // 启用安全策略
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
@@ -87,26 +90,26 @@ function loadFile() {
 
 app.whenReady().then(() => {
   createWindow();
-  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, "/icons/music128x128.png"));
+  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, "/icons/music@6x.png"));
   const resizedIcon = icon.resize({ width: 128, height: 128 });
   let tray = new Tray(resizedIcon);
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "播放/暂停",
       click: () => {
-        mainWindow.webContents.send(event.PLAY.value, event.PLAY.value);
+        mainWindow.webContents.send(eventName.PLAY.value, eventName.PLAY.value);
       },
     },
     {
       label: "上一首",
       click: () => {
-        mainWindow.webContents.send(event.PRE.value, event.PRE.value);
+        mainWindow.webContents.send(eventName.PRE.value, eventName.PRE.value);
       },
     },
     {
       label: "下一首",
       click: () => {
-        mainWindow.webContents.send(event.NEXT.value, event.NEXT.value);
+        mainWindow.webContents.send(eventName.NEXT.value, eventName.NEXT.value);
       },
     },
     {

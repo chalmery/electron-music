@@ -1,26 +1,26 @@
 import {ipcMain} from "electron";
-import localSetting from "../../lib/event";
+import {eventName} from "../../lib/metadata/event";
 import {read,save} from "../../lib/fs";
-import dataName from "../../lib/dataName";
+import {fileName} from "../../lib/metadata/metadata";
 
 function find(callback) {
-    read(dataName.DIRS.value, callback)
+    read(fileName.DIRS.value, callback)
 }
 
 
 const localSettingAction = () => {
     //本地文件夹读取
-    ipcMain.on(localSetting.LOCAL_CONF_INIT.value, (event, data) => {
+    ipcMain.on(eventName.LOCAL_CONF_INIT.value, (event, data) => {
         find((dataDir) => {
             if (dataDir !== null && dataDir !== undefined) {
-                event.reply(localSetting.DIR_DATA_CALLBACK.value, JSON.parse(dataDir))
+                event.reply(eventName.DIR_DATA_CALLBACK.value, JSON.parse(dataDir))
             }
         })
     })
     //文件夹更新
-    ipcMain.on(localSetting.UPDATE_DIR.value, (event, data) => {
-        save(dataName.DIRS.value,JSON.stringify(data),() => {
-            event.reply(localSetting.UPDATE_DIR_CALLBACK.value, localSetting.UPDATE_DIR_CALLBACK.value)
+    ipcMain.on(eventName.UPDATE_DIR.value, (event, data) => {
+        save(fileName.DIRS.value,JSON.stringify(data),() => {
+            event.reply(eventName.UPDATE_DIR_CALLBACK.value, eventName.UPDATE_DIR_CALLBACK.value)
         })
     })
 }

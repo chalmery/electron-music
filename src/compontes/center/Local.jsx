@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Layout, Dropdown, Table } from "antd";
-import dataEvent from "../../../electron/lib/event";
-import localSetting from "../../../electron/lib/event";
+const dataEvent = window.dataEvent;
 import eventManager from "../../event/eventManager";
 import pageEvent from "@/event/pageEvent";
 import { playModeRepository } from "@/strategy/repository/repository";
@@ -52,10 +51,10 @@ export default function Local() {
 
   useEffect(() => {
     //查数据
-    electron.ipcRenderer.send(dataEvent.LOCAL.value, dataEvent.LOCAL.value);
+    electron.ipcRenderer.send(dataEvent.eventName.LOCAL.value, dataEvent.eventName.LOCAL.value);
 
     //回调
-    electron.ipcRenderer.on(dataEvent.LOCAL_CALLBACK.value, (event, data) => {
+    electron.ipcRenderer.on(dataEvent.eventName.LOCAL_CALLBACK.value, (event, data) => {
       setDirList(data);
       dirListRef.current = data;
     });
@@ -68,7 +67,7 @@ export default function Local() {
 
     // 取消订阅
     return () => {
-      electron.ipcRenderer.removeAllListeners(localSetting.LOCAL_CALLBACK.value);
+      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.LOCAL_CALLBACK.value);
       eventManager.unsubscribe(pageEvent.NEXT.value, handleNext);
       eventManager.unsubscribe(pageEvent.PRE.value, handlePre);
     };
@@ -113,7 +112,7 @@ export default function Local() {
    * @param data
    */
   const findLrc = (data) => {
-    electron.ipcRenderer.send(dataEvent.LRC.value, data);
+    electron.ipcRenderer.send(dataEvent.eventName.LRC.value, data);
   };
 
   /**

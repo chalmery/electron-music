@@ -1,5 +1,8 @@
-//本地设置
-const localSetting = {
+/**
+ * 全部的事件
+ * @type
+*/
+const eventName = {
   //本地设置页面相关事件
   LOCAL_CONF_INIT: { label: "本地设置页面初始化", value: "localConfInit" },
   OPEN_DIR: { label: "选择目录", value: "openDir" },
@@ -28,4 +31,4 @@ const localSetting = {
   
 };
 
-export default localSetting;
+export  {eventName};
