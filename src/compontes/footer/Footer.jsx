@@ -3,7 +3,7 @@ import {Popover, Progress, Slider, Tooltip} from "antd";
 import icon from "/icons/music@6x.png";
 import eventManager from "../../event/eventManager";
 import pageEvent from "@/event/pageEvent";
-import {listType, playModeEnum} from "@/enums/enums";
+import {fileTypeEnum, listType, playModeEnum} from "@/enums/enums";
 import {
   Favorite,
   FavoriteBorder,
@@ -17,6 +17,7 @@ import {
   VolumeOff,
   VolumeUp,
 } from "@mui/icons-material";
+import {getFileBlobByPath} from "@/util/filtUtils";
 const fs = window.fs;
 const dataEvent = window.dataEvent;
 const utils = window.utils;
@@ -118,8 +119,9 @@ function Footer(props) {
     setTitle(title);
     setDuration(duration);
     if (picture) {
-      const fileUrl = `file://${picture}`;
-      setPicture(fileUrl);
+      getFileBlobByPath(picture,fileTypeEnum.picture,(blob)=>{
+        setPicture(blob);
+      })
     }
     //播放音乐
     play(path);

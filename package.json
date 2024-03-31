@@ -30,6 +30,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.15.14",
+    "file-type": "^19.0.0",
     "mime-types": "^2.1.35",
     "music-metadata": "^7.13.3",
     "react-router-cache-route": "^1.12.11"
