@@ -8,6 +8,8 @@ import { CharConstants } from "../../constants/constant";
 import {formatTime, getMd5Value} from "../../lib/util/utils";
 
 const { parseFile } = require("music-metadata");
+import {fileTypeFromBuffer} from 'file-type';
+
 
 function readDir(dir, fileList) {
   try {
@@ -49,6 +51,11 @@ function batchReadDir(dirs) {
 function savePicture(data, value, metadata, hashCode) {
   //存储二进制图片
   let picture = data.common.picture[0].data;
+
+  fileTypeFromBuffer(picture).then(res => {
+    metadata.pictureMime = res.mime
+    metadata.pictureExt = res.ext
+  })
   //获取文件后缀
   let imageMimeType = data.common.picture[0].format;
   let format = mime.extension(imageMimeType);
@@ -93,14 +100,25 @@ function parseMetaData(fileList, callback, event) {
             album: data.common.album,
             parentPath: value.dir,
             picture: null,
+            pictureExt: 'png',
+            pictureMime: 'image/png',
             path: value.filePath,
             duration: formatTime(data.format.duration),
-            type: data.format.container,
+            type: data.format.container ? data.format.container.toLowerCase() : 'mp3',
+            mime: data.format.container ? 'audio/'+data.format.container.toLowerCase() : 'audio/mp3',
             hashCode: value.hashCode,
           };
-          //保存图片
+
           if (data.common.picture !== undefined && data.common.picture.length !== 0) {
+            //保存图片
             savePicture(data, value, metadata, value.hashCode);
+            //获取文件类型
+            //TODO 如何做到同步，否则保存的时候，这里不一定set好
+            let picture = data.common.picture[0].data;
+            fileTypeFromBuffer(picture).then(res => {
+              metadata.pictureMime = res.mime
+              metadata.pictureExt = res.ext
+            })
           }
           metaList.push({ key: value.dir, value: metadata });
         }
@@ -130,6 +148,7 @@ function call(fileList, event) {
     event.reply(eventName.SYNC_DATA_CALLBACK.value, eventName.SYNC_DATA_CALLBACK.value);
     return;
   }
+  console.log("回调前端 排序开始")
   const groupedArray = Object.values(
     fileList.reduce((acc, obj) => {
       const { key, value } = obj;
@@ -142,8 +161,10 @@ function call(fileList, event) {
   );
   //排序
   groupedArray.sort((a, b) => a.label.localeCompare(b.label));
+  console.log("回调前端 排序结束")
 
   save(fileName.META_DATA.value, JSON.stringify(groupedArray), () => {
+    console.log("回调前端 SYNC_DATA_CALLBACK")
     event.reply(eventName.SYNC_DATA_CALLBACK.value, eventName.SYNC_DATA_CALLBACK.value);
   });
 }
@@ -151,6 +172,7 @@ function call(fileList, event) {
 //同步数据
 const dataSyncAction = () => {
   ipcMain.on(eventName.SYNC_DATA.value, (event, data) => {
+    console.log("收到前端 SYNC_DATA")
     if (data === undefined || data === null) {
       event.reply(eventName.SYNC_DATA_CALLBACK.value, null);
       return;

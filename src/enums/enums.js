@@ -1,6 +1,5 @@
 /**
  * 播放类型
- * @type {{SINGLE_LOOP: string, LIST_LOOP: string, RANDOM: string}}
  */
 const playModeEnum = {
   SINGLE_LOOP: '单曲循环',
@@ -11,7 +10,6 @@ const playModeEnum = {
 
 /**
  * 列表循环类型
- * @type {{LocalListLoop: string, PlayListListLoop: string, LoveListLoop: string}}
  */
 const listType = {
   LocalListLoop: '本地歌曲列表循环',
@@ -19,4 +17,13 @@ const listType = {
   PlayListListLoop: '播放列表的列表循环',
 };
 
-export {playModeEnum, listType}
+/**
+ * 列表循环类型
+ */
+const fileTypeEnum = {
+  picture: 'picture',
+  music: 'music',
+};
+
+
+export {playModeEnum, listType,fileTypeEnum}

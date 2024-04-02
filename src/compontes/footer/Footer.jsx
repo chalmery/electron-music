@@ -3,7 +3,7 @@ import {Popover, Progress, Slider, Tooltip} from "antd";
 import icon from "/icons/music@6x.png";
 import eventManager from "../../event/eventManager";
 import pageEvent from "@/event/pageEvent";
-import {listType, playModeEnum} from "@/enums/enums";
+import {fileTypeEnum, listType, playModeEnum} from "@/enums/enums";
 import {
   Favorite,
   FavoriteBorder,
@@ -17,7 +17,8 @@ import {
   VolumeOff,
   VolumeUp,
 } from "@mui/icons-material";
-const fs = window.fs;
+import {getFileBlobByMetaData} from "@/util/filtUtils";
+
 const dataEvent = window.dataEvent;
 const utils = window.utils;
 
@@ -117,26 +118,21 @@ function Footer(props) {
     //设置属性
     setTitle(title);
     setDuration(duration);
+    //放图片
     if (picture) {
-      const fileUrl = `file://${picture}`;
-      setPicture(fileUrl);
+      getFileBlobByMetaData(data,fileTypeEnum.picture,(blob)=>{
+        setPicture(blob);
+      })
     }
     //播放音乐
-    play(path);
+    getFileBlobByMetaData(data, fileTypeEnum.music, (blob) => {
+      audioRef.current.src = blob;
+      audioRef.current.play();
+    })
+    //标记播放状态为开始
     playStateRef.current = true;
   };
 
-  function play(path) {
-    fs.readFile(path, (error, data) => {
-      if (error) {
-        console.error("Error reading file:", error);
-        return;
-      }
-      const audioBlob = new Blob([data], {type: "audio/flac"});
-      audioRef.current.src = URL.createObjectURL(audioBlob);
-      audioRef.current.play();
-    });
-  }
 
   const handleVolumeChange = (value) => {
     setVolume(value);

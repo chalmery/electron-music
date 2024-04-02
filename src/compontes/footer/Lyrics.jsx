@@ -4,6 +4,7 @@ import icon from "/icons/music@6x.png";
 import pageEvent from "@/event/pageEvent";
 import eventManager from "@/event/eventManager";
 const dataEvent = window.dataEvent;
+import {resolvePictureToBase64} from "@/util/filtUtils";
 
 export default function Lyrics(props) {
   /**
@@ -14,12 +15,19 @@ export default function Lyrics(props) {
    * 歌词
    */
   const [lrc, setLrc] = useState([]);
-
   const lrcRef = useRef(null);
-
   const lyricsContainerRef = useRef(null);
 
+  /**
+   * 展示状态
+   */
   const { show } = props;
+
+  /**
+   * 专辑图片的base64对象
+   */
+  const [picture, setPicture] = useState(null);
+
 
   useEffect(() => {
     // 订阅事件
@@ -42,7 +50,12 @@ export default function Lyrics(props) {
   }, []);
 
   const handleEvent = (data) => {
+    //放置当前播放歌曲元数据
     setMetadata(data);
+    //解析专辑为base64
+    resolvePictureToBase64(data.picture,(base64)=>{
+      setPicture(base64)
+    });
   };
 
   /**
@@ -90,7 +103,7 @@ export default function Lyrics(props) {
     backdropFilter: "blur(8px)",
   };
   if (metadata) {
-    containerStyle.backgroundImage = `url(${"file://" + metadata.picture})`;
+    containerStyle.backgroundImage = `url(${picture})`;
   }
   const lyricsClass = show ? "lyrics-container show" : "lyrics-container hide";
 
@@ -102,7 +115,7 @@ export default function Lyrics(props) {
             <div>
               <img
                 className="lrc-left-picture"
-                src={(metadata === null)||(metadata.picture === null) ? icon : `file://${metadata.picture}`}
+                src={(metadata === null)||(metadata.picture === null) ? icon : `${picture}`}
                 alt={icon}
               />
               <div className="lrc-left-info">
