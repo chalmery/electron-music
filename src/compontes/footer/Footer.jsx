@@ -17,8 +17,7 @@ import {
   VolumeOff,
   VolumeUp,
 } from "@mui/icons-material";
-import {getFileBlobByPath} from "@/util/filtUtils";
-const fs = window.fs;
+import {getFileBlobByMetaData} from "@/util/filtUtils";
 const dataEvent = window.dataEvent;
 const utils = window.utils;
 
@@ -118,27 +117,21 @@ function Footer(props) {
     //设置属性
     setTitle(title);
     setDuration(duration);
+    //放图片
     if (picture) {
-      getFileBlobByPath(picture,fileTypeEnum.picture,(blob)=>{
-        setPicture(blob);
+      getFileBlobByMetaData(data,fileTypeEnum.picture,(blob)=>{
+        audioRef.current.src = blob;
+        audioRef.current.play();
       })
     }
     //播放音乐
-    play(path);
+    getFileBlobByMetaData(data,fileTypeEnum.music,(blob)=>{
+      setPicture(blob);
+    })
+    //标记播放状态为开始
     playStateRef.current = true;
   };
 
-  function play(path) {
-    fs.readFile(path, (error, data) => {
-      if (error) {
-        console.error("Error reading file:", error);
-        return;
-      }
-      const audioBlob = new Blob([data], {type: "audio/flac"});
-      audioRef.current.src = URL.createObjectURL(audioBlob);
-      audioRef.current.play();
-    });
-  }
 
   const handleVolumeChange = (value) => {
     setVolume(value);
