@@ -4,6 +4,23 @@ const fs = window.fs;
 
 
 /**
+ * 解析图片为base64
+ * @param path
+ * @param callback
+ */
+function resolvePictureToBase64(path, callback) {
+  fs.readFile(path, (error, data) => {
+    if (error) {
+      console.error("Error reading file:", error);
+      return;
+    }
+    const base64String = Buffer.from(data).toString('base64');
+    const base64Info = `data:image/*;base64,${base64String}`;
+    callback(base64Info);
+  });
+}
+
+/**
  * 根据入参的元数据，获取文件blob数据
  * @param metadata
  * @param fileType
@@ -34,5 +51,5 @@ function getFileBlobByMetaData(metadata, fileType, callback) {
 }
 
 export {
-  getFileBlobByMetaData
+  getFileBlobByMetaData,resolvePictureToBase64
 }

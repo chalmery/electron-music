@@ -18,6 +18,7 @@ import {
   VolumeUp,
 } from "@mui/icons-material";
 import {getFileBlobByMetaData} from "@/util/filtUtils";
+
 const dataEvent = window.dataEvent;
 const utils = window.utils;
 
@@ -120,13 +121,13 @@ function Footer(props) {
     //放图片
     if (picture) {
       getFileBlobByMetaData(data,fileTypeEnum.picture,(blob)=>{
-        audioRef.current.src = blob;
-        audioRef.current.play();
+        setPicture(blob);
       })
     }
     //播放音乐
-    getFileBlobByMetaData(data,fileTypeEnum.music,(blob)=>{
-      setPicture(blob);
+    getFileBlobByMetaData(data, fileTypeEnum.music, (blob) => {
+      audioRef.current.src = blob;
+      audioRef.current.play();
     })
     //标记播放状态为开始
     playStateRef.current = true;
