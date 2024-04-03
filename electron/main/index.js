@@ -1,18 +1,26 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage } = require("electron");
-const { join } = require("path");
+import {app, BrowserWindow, Menu, nativeImage, Tray} from 'electron'
+import {dirname, join} from 'node:path'
+import {listen} from "../listen/listen";
+import {eventName} from "../lib/metadata/event";
+import {fileURLToPath} from "node:url";
 
-process.env.DIST = join(__dirname, "../..");
-process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST, "../public");
-process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+globalThis.__filename = fileURLToPath(import.meta.url)
+globalThis.__dirname = dirname(__filename)
+
+process.env.DIST_ELECTRON = join(__dirname, '../')
+process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
+process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
+  ? join(process.env.DIST_ELECTRON, '../public')
+  : process.env.DIST
+
+/**
+ * process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+ */
 
 let mainWindow;
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, "index.html");
-// Here, you can also use other preload
-const preload = join(__dirname, "../preload/index.js");
-
-import { listen } from "../listen/listen";
-import {eventName} from "../lib/metadata/event";
+const preload = join(__dirname, "../preload/index.mjs");
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -20,17 +28,18 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 // Install `react-devtools`
-if (app.isPackaged === false) {
-  app.whenReady().then(() => {
-    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require("electron-devtools-installer");
-
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then(() => {})
-      .catch((err) => {
-        console.error("Unable to install `react-devtools`: \n", err);
-      });
-  });
-}
+// if (app.isPackaged === false) {
+//   app.whenReady().then(() => {
+//     import {default: installExtension, REACT_DEVELOPER_TOOLS} from 'electron-devtools-installer';
+//
+//     installExtension(REACT_DEVELOPER_TOOLS)
+//       .then(() => {
+//       })
+//       .catch((err) => {
+//         console.error("Unable to install `react-devtools`: \n", err);
+//       });
+//   });
+// }
 
 function createWindow() {
   /**
@@ -41,23 +50,23 @@ function createWindow() {
     width: 1000,
     maximizable: true,
     fullscreen: false,
-    title: "",
+    title: "Electron Music",
     icon: [
-      join(process.env.PUBLIC, "icons/music.png"),
-      join(process.env.PUBLIC, "icons/music@2x.png"),
-      join(process.env.PUBLIC, "icons/music@3x.png"),
-      join(process.env.PUBLIC, "icons/music@4x.png"),
-      join(process.env.PUBLIC, "icons/music@5x.png"),
-      join(process.env.PUBLIC, "icons/music@6x.png"),
+      join(process.env.VITE_PUBLIC, "icons/music.png"),
+      join(process.env.VITE_PUBLIC, "icons/music@2x.png"),
+      join(process.env.VITE_PUBLIC, "icons/music@3x.png"),
+      join(process.env.VITE_PUBLIC, "icons/music@4x.png"),
+      join(process.env.VITE_PUBLIC, "icons/music@5x.png"),
+      join(process.env.VITE_PUBLIC, "icons/music@6x.png"),
     ],
     webPreferences: {
       preload,
-      webviewTag: true,
-      webSecurity: true, // 启用安全策略
-      nodeIntegration: true,
-      enableRemoteModule: true,
-      contextIsolation: false,
-      nodeIntegrationInSubFrames: true,
+      // webviewTag: true,
+      // webSecurity: true, // 启用安全策略
+      // nodeIntegration: true,
+      // enableRemoteModule: true,
+      // contextIsolation: false,
+      // nodeIntegrationInSubFrames: true,
     },
   });
   loadFile();
@@ -90,8 +99,8 @@ function loadFile() {
 
 app.whenReady().then(() => {
   createWindow();
-  const icon = nativeImage.createFromPath(join(process.env.PUBLIC, "/icons/music@6x.png"));
-  const resizedIcon = icon.resize({ width: 128, height: 128 });
+  const icon = nativeImage.createFromPath(join(process.env.VITE_PUBLIC, "icons/music@6x.png"));
+  const resizedIcon = icon.resize({width: 128, height: 128});
   let tray = new Tray(resizedIcon);
   const contextMenu = Menu.buildFromTemplate([
     {

@@ -4,6 +4,7 @@ import icon from "/icons/music@6x.png";
 import pageEvent from "@/event/pageEvent";
 import eventManager from "@/event/eventManager";
 const dataEvent = window.dataEvent;
+
 import {resolvePictureToBase64} from "@/util/filtUtils";
 
 export default function Lyrics(props) {
@@ -37,7 +38,7 @@ export default function Lyrics(props) {
     eventManager.subscribe(pageEvent.CURRENT_TIME.value, handleCurrentTime);
 
     //查询歌词
-    electron.ipcRenderer.on(dataEvent.eventName.LRC_CALLBACK.value, (event, data) => {
+    window.ipcRenderer.on(dataEvent.eventName.LRC_CALLBACK.value, (event, data) => {
       setLrc(data);
       lrcRef.current = data;
     });
@@ -45,7 +46,7 @@ export default function Lyrics(props) {
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       eventManager.unsubscribe(pageEvent.CURRENT_TIME.value, handleCurrentTime);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.LRC_CALLBACK.value);
+      window.ipcRenderer.removeAllListeners(dataEvent.eventName.LRC_CALLBACK.value);
     };
   }, []);
 

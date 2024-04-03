@@ -1,6 +1,6 @@
 import {CharConstants} from "../../constants/constant";
 
-const {app} = require("electron");
+import {app} from 'electron';
 
 /**
  * 音乐文件类型

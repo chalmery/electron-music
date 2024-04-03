@@ -1,6 +1,17 @@
 # Changelog
 
-## [Unreleased]
+
+
+
+## [1.1.3] - 2023-04-03
+### 新增：
+### 修改：
+* 调整文件图标
+### 修复：
+* 修复安全策略问题[#1](https://github.com/chalmery/electron-music/issues/1)
+
+
+## [1.1.2] - 2023-07-01
 
 ### 新增：
 

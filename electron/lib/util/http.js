@@ -1,6 +1,6 @@
 import {CharConstants,BizConstants} from "../../constants/constant";
 
-const https = require("https")
+import https from 'https';
 
 /**
  * get请求函数

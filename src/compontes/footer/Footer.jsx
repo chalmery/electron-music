@@ -18,7 +18,6 @@ import {
   VolumeUp,
 } from "@mui/icons-material";
 import {getFileBlobByMetaData} from "@/util/filtUtils";
-
 const dataEvent = window.dataEvent;
 const utils = window.utils;
 
@@ -89,15 +88,15 @@ function Footer(props) {
     audioPlayer.addEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
 
 
-    electron.ipcRenderer.on(dataEvent.eventName.NEXT.value, (event, data) => {
+    window.ipcRenderer.on(dataEvent.eventName.NEXT.value, (event, data) => {
       skipNext()
     });
 
-    electron.ipcRenderer.on(dataEvent.eventName.PRE.value, (event, data) => {
+    window.ipcRenderer.on(dataEvent.eventName.PRE.value, (event, data) => {
       skipPrevious()
     });
 
-    electron.ipcRenderer.on(dataEvent.eventName.PLAY.value, (event, data) => {
+    window.ipcRenderer.on(dataEvent.eventName.PLAY.value, (event, data) => {
       handlePlayPauseClick()
     });
 
@@ -105,9 +104,9 @@ function Footer(props) {
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.NEXT.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.PRE.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.PLAY.value);
+      window.ipcRenderer.removeAllListeners(dataEvent.eventName.NEXT.value);
+      window.ipcRenderer.removeAllListeners(dataEvent.eventName.PRE.value);
+      window.ipcRenderer.removeAllListeners(dataEvent.eventName.PLAY.value);
     };
   }, [audioRef.current]);
 

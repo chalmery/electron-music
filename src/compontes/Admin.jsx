@@ -1,15 +1,14 @@
 import React, {useState} from "react";
 
-import LeftMenu from "@/compontes/left/LeftMenu";
-import {Redirect} from "react-router-dom";
-import Local from "@/compontes/center/Local";
-import Online from "@/compontes/center/Online";
-import {CacheRoute, CacheSwitch} from "react-router-cache-route";
+// import { Route} from "react-router-dom";
+// import Local from "@/compontes/center/Local";
+// import Online from "@/compontes/center/Online";
 import {Layout} from "antd";
-import MusicBar from "@/compontes/footer/Footer";
-import Playlist from "@/compontes/center/Playlist";
-import Love from "@/compontes/center/Love";
-import Lyrics from "@/compontes/footer/Lyrics";
+// import MusicBar from "@/compontes/footer/Footer";
+// import Playlist from "@/compontes/center/Playlist";
+// import Love from "@/compontes/center/Love";
+// import Lyrics from "@/compontes/footer/Lyrics";
+// import LeftMenu from "@/compontes/left/LeftMenu";
 
 const {Footer, Sider, Content} = Layout;
 
@@ -26,24 +25,24 @@ export default function Admin() {
 
   return (
     <div>
-      <Lyrics show={show} metadata={metadata}/>
-      <Layout>
-        <Sider>
-          <LeftMenu/>
-        </Sider>
-        <Content>
-          <CacheSwitch>
-            <Redirect from="/" exact to="/"/>
-            <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
-            <CacheRoute path="/online" component={Online}/>
-            <CacheRoute path="/playlist" component={Playlist}/>
-            <CacheRoute path="/love" component={Love}/>
-          </CacheSwitch>
-        </Content>
-        <Footer className="footer">
-          <MusicBar onStatusChange={handleStatusChange}/>
-        </Footer>
-      </Layout>
+
+      你好世界
+      {/*<Lyrics show={show} metadata={metadata}/>*/}
+      {/*<Layout>*/}
+      {/*  <Sider>*/}
+      {/*    <LeftMenu/>*/}
+      {/*  </Sider>*/}
+      {/*  <Content>*/}
+      {/*    <Route from="/" exact to="/"/>*/}
+      {/*    <Route path="/local" component={Local} style={{flex: 1}}/>*/}
+      {/*    <Route path="/online" component={Online}/>*/}
+      {/*    <Route path="/playlist" component={Playlist}/>*/}
+      {/*    <Route path="/love" component={Love}/>*/}
+      {/*  </Content>*/}
+      {/*  <Footer className="footer">*/}
+      {/*    <MusicBar onStatusChange={handleStatusChange}/>*/}
+      {/*  </Footer>*/}
+      {/*</Layout>*/}
     </div>
   );
 }

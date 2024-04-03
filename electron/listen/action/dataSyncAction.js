@@ -1,13 +1,13 @@
-import { ipcMain } from "electron";
+import {ipcMain} from "electron";
 import {eventName} from "../../lib/metadata/event";
-import { save, access, readdirSync, statSync } from "../../lib/fs";
+import {access, readdirSync, save, statSync} from "../../lib/fs";
 import {fileName, fileTypeList, getPath} from "../../lib/metadata/metadata";
 import path from "path";
 import mime from "mime-types";
-import { CharConstants } from "../../constants/constant";
+import {CharConstants} from "../../constants/constant";
 import {formatTime, getMd5Value} from "../../lib/util/utils";
 
-const { parseFile } = require("music-metadata");
+import {parseFile} from 'music-metadata'
 import {fileTypeFromBuffer} from 'file-type';
 
 
@@ -105,7 +105,7 @@ function parseMetaData(fileList, callback, event) {
             path: value.filePath,
             duration: formatTime(data.format.duration),
             type: data.format.container ? data.format.container.toLowerCase() : 'mp3',
-            mime: data.format.container ? 'audio/'+data.format.container.toLowerCase() : 'audio/mp3',
+            mime: data.format.container ? 'audio/' + data.format.container.toLowerCase() : 'audio/mp3',
             hashCode: value.hashCode,
           };
 
@@ -120,7 +120,7 @@ function parseMetaData(fileList, callback, event) {
               metadata.pictureExt = res.ext
             })
           }
-          metaList.push({ key: value.dir, value: metadata });
+          metaList.push({key: value.dir, value: metadata});
         }
       })
       .catch((err) => {
@@ -151,9 +151,9 @@ function call(fileList, event) {
   console.log("回调前端 排序开始")
   const groupedArray = Object.values(
     fileList.reduce((acc, obj) => {
-      const { key, value } = obj;
+      const {key, value} = obj;
       if (!acc[key]) {
-        acc[key] = { key: key, label: path.basename(key), value: [] };
+        acc[key] = {key: key, label: path.basename(key), value: []};
       }
       acc[key].value.push(value);
       return acc;
@@ -185,5 +185,4 @@ const dataSyncAction = () => {
 };
 
 
-
-export { dataSyncAction };
+export {dataSyncAction};

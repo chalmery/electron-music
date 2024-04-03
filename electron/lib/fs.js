@@ -1,5 +1,5 @@
 import {CharConstants} from "../constants/constant";
-const fs = require("fs");
+import fs from 'fs';
 import {getPath} from "./metadata/metadata";
 
 
