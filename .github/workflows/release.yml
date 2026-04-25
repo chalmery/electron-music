@@ -9,6 +9,8 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     environment: package
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -47,37 +49,5 @@ jobs:
       - name: Build (macOS)
         if: matrix.platform == 'mac'
         run: npm run build -- --mac
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-${{ matrix.platform }}
-          path: |
-            release/*.zip
-            release/*.tar.gz
-            release/*.AppImage
-            release/*.dmg
-            release/*.exe
-          if-no-files-found: warn
-
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-          merge-multiple: true
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/**
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
