@@ -6,7 +6,7 @@ import crypto from "crypto";
  * @returns {String|string}
  */
 function parseString(data) {
-    return data instanceof String ? data : JSON.stringify(data);
+    return typeof data === 'string' ? data : JSON.stringify(data);
 }
 
 

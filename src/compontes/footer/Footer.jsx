@@ -20,7 +20,7 @@ import {
 import {getFileBlobByMetaData} from "@/util/filtUtils";
 
 const dataEvent = window.dataEvent;
-const utils = window.utils;
+const utils = window.electronAPI.utils;
 
 //播放模式枚举
 const IconMap = {
@@ -89,15 +89,15 @@ function Footer(props) {
     audioPlayer.addEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
 
 
-    electron.ipcRenderer.on(dataEvent.eventName.NEXT.value, (event, data) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.NEXT.value, (event, data) => {
       skipNext()
     });
 
-    electron.ipcRenderer.on(dataEvent.eventName.PRE.value, (event, data) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.PRE.value, (event, data) => {
       skipPrevious()
     });
 
-    electron.ipcRenderer.on(dataEvent.eventName.PLAY.value, (event, data) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.PLAY.value, (event, data) => {
       handlePlayPauseClick()
     });
 
@@ -105,16 +105,16 @@ function Footer(props) {
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       audioPlayer.removeEventListener(pageEvent.TIME_UPDATE.value, updateProgress);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.NEXT.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.PRE.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.PLAY.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.NEXT.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.PRE.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.PLAY.value);
     };
   }, [audioRef.current]);
 
   const handleEvent = (data) => {
     metadata.current = data;
-    // 处理事件
-    let {title, picture, path, duration} = data;
+    eventManager.lastPlayed = data;
+    let {title, picture, duration} = data;
     //设置属性
     setTitle(title);
     setDuration(duration);

@@ -9,7 +9,7 @@ const dataEvent = window.dataEvent;
  */
 const singleLoop = (data) => {
   eventManager.publish(pageEvent.CLICK_MUSIC.value, data.metadata)
-  electron.ipcRenderer.send(dataEvent.eventName.LRC.value, data.metadata)
+  window.electronAPI.ipcRenderer.send(dataEvent.eventName.LRC.value, data.metadata)
 }
 
 function generateRandomNum(max, min) {
@@ -30,7 +30,7 @@ const random = (data) => {
     if (metadata) {
       call(metadata)
       eventManager.publish(pageEvent.CLICK_MUSIC.value, metadata)
-      electron.ipcRenderer.send(dataEvent.eventName.LRC.value, metadata)
+      window.electronAPI.ipcRenderer.send(dataEvent.eventName.LRC.value, metadata)
     }
   }
 }

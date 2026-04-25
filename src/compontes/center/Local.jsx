@@ -46,17 +46,24 @@ export default function Local() {
   const [dirList, setDirList] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const dirListRef = useRef(dirList);
-  const [thisMusic, setThisMusic] = useState(null);
-  const [thisDir, setThisDir] = useState(null);
+  const [thisMusic, setThisMusic] = useState(() => eventManager.lastPlayed);
+  const [thisDir, setThisDir] = useState(() => eventManager.lastDir);
 
   useEffect(() => {
-    //查数据
-    electron.ipcRenderer.send(dataEvent.eventName.LOCAL.value, dataEvent.eventName.LOCAL.value);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.LOCAL.value, dataEvent.eventName.LOCAL.value);
 
-    //回调
-    electron.ipcRenderer.on(dataEvent.eventName.LOCAL_CALLBACK.value, (event, data) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.LOCAL_CALLBACK.value, (event, data) => {
       setDirList(data);
       dirListRef.current = data;
+      // 恢复上次选中的目录和歌曲列表
+      const savedDir = eventManager.lastDir;
+      if (savedDir) {
+        const matched = data.find((item) => item.key === savedDir.key);
+        if (matched) {
+          setThisDir(matched);
+          setDataSource(matched.value);
+        }
+      }
     });
 
     //下一首
@@ -67,7 +74,7 @@ export default function Local() {
 
     // 取消订阅
     return () => {
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.LOCAL_CALLBACK.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.LOCAL_CALLBACK.value);
       eventManager.unsubscribe(pageEvent.NEXT.value, handleNext);
       eventManager.unsubscribe(pageEvent.PRE.value, handlePre);
     };
@@ -112,7 +119,7 @@ export default function Local() {
    * @param data
    */
   const findLrc = (data) => {
-    electron.ipcRenderer.send(dataEvent.eventName.LRC.value, data);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.LRC.value, data);
   };
 
   /**
@@ -121,6 +128,7 @@ export default function Local() {
    */
   function tableRowClick(record) {
     setThisMusic(record);
+    eventManager.lastPlayed = record;
     eventManager.publish(pageEvent.CLICK_MUSIC.value, record);
     findLrc(record);
   }
@@ -128,25 +136,19 @@ export default function Local() {
   //文件夹列表点击
   const handleMenuClick = (record) => {
     setThisDir(record);
+    eventManager.lastDir = record;
     const selectedItem = dirList.find((item) => item.key === record.key);
     if (selectedItem) {
-      const { value } = selectedItem;
-      setDataSource(value);
+      setDataSource(selectedItem.value);
     }
   };
 
-  const rowClassName = (record, index) => {
-    if (thisMusic) {
-      return thisMusic === record ? "color-row" : "";
-    }
-    return "";
+  const rowClassName = (record) => {
+    return thisMusic && record.hashCode === thisMusic.hashCode ? "color-row" : "";
   };
 
-  const dirRowClassName = (record, index) => {
-    if (thisDir) {
-      return thisDir === record ? "color-row" : "";
-    }
-    return "";
+  const dirRowClassName = (record) => {
+    return thisDir && record.key === thisDir.key ? "color-row" : "";
   };
 
   return (

@@ -22,7 +22,7 @@ const localListLoop = (data) => {
     const nextMetaData = values[nextIndex];
     call(nextMetaData)
     eventManager.publish(pageEvent.CLICK_MUSIC.value, nextMetaData)
-    electron.ipcRenderer.send(dataEvent.eventName.LRC.value, nextMetaData)
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.LRC.value, nextMetaData)
   }
 }
 

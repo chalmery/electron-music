@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, List, message, Space } from "antd";
-const dataEvent = window.dataEvent;
-
 import { Backspace } from "@mui/icons-material";
 
-const electron = window.electron;
+const dataEvent = window.dataEvent;
 
 export default function LocalConf() {
   const [localDir, setLocalDir] = useState([]);
@@ -17,64 +15,64 @@ export default function LocalConf() {
 
   useEffect(() => {
     //查数据
-    electron.ipcRenderer.send(dataEvent.eventName.LOCAL_CONF_INIT.value, dataEvent.eventName.LOCAL_CONF_INIT.value);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.LOCAL_CONF_INIT.value, dataEvent.eventName.LOCAL_CONF_INIT.value);
 
     //回调
-    electron.ipcRenderer.on(dataEvent.eventName.DIR_DATA_CALLBACK.value, (event, files) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.DIR_DATA_CALLBACK.value, (event, files) => {
       setLocalDir(files);
     });
 
     //回调
-    electron.ipcRenderer.on(dataEvent.eventName.SYNC_DATA_CALLBACK.value, (event, data) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.SYNC_DATA_CALLBACK.value, (event, data) => {
       setLoading(false);
       message.success("同步成功", 2);
       if (data !== null) {
-        electron.ipcRenderer.send(dataEvent.LOCAL.value, dataEvent.LOCAL.value);
+        window.electronAPI.ipcRenderer.send(dataEvent.eventName.LOCAL.value, dataEvent.eventName.LOCAL.value);
       }
     });
 
     //回调
-    electron.ipcRenderer.on(dataEvent.eventName.INSTALL_LRC_CALLBACK.value, () => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.INSTALL_LRC_CALLBACK.value, () => {
       setLrcLoading(false);
       message.success("下载完成", 2);
     });
 
     //回调
-    electron.ipcRenderer.on(dataEvent.eventName.UPDATE_DIR_CALLBACK.value, () => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.UPDATE_DIR_CALLBACK.value, () => {
       message.success("更新文件夹数据成功", 2);
     });
 
     return () => {
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.DIR_DATA_CALLBACK.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.SYNC_DATA_CALLBACK.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.INSTALL_LRC_CALLBACK.value);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.UPDATE_DIR_CALLBACK.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.DIR_DATA_CALLBACK.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.SYNC_DATA_CALLBACK.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.INSTALL_LRC_CALLBACK.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.UPDATE_DIR_CALLBACK.value);
     };
   }, []);
 
   //同步数据
   const enterLoading = () => {
     setLoading(true);
-    electron.ipcRenderer.send(dataEvent.eventName.SYNC_DATA.value, localDir);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.SYNC_DATA.value, localDir);
   };
 
   //传递打开本地文件选择器选项
   const openDirSelect = () => {
     console.log("start");
-    electron.ipcRenderer.send(dataEvent.eventName.OPEN_DIR.value, dataEvent.eventName.OPEN_DIR.value);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.OPEN_DIR.value, dataEvent.eventName.OPEN_DIR.value);
   };
 
   //下载歌词
   const installLrc = () => {
     setLrcLoading(true);
-    electron.ipcRenderer.send(dataEvent.eventName.INSTALL_LRC.value, localDir);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.INSTALL_LRC.value, localDir);
   };
 
   //删除文件夹
   const removeDir = (dir) => {
     let data = localDir.filter((item) => item !== dir);
     setLocalDir(data);
-    electron.ipcRenderer.send(dataEvent.eventName.UPDATE_DIR.value, data);
+    window.electronAPI.ipcRenderer.send(dataEvent.eventName.UPDATE_DIR.value, data);
   };
 
   return (
