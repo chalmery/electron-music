@@ -7,8 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-package-lock.json
-
 node_modules
 dist
 dist-ssr
@@ -29,3 +27,7 @@ yarn.lock
 *.sw?
 
 pnpm-lock.yaml
+
+#ai
+.claude
+.qoder
