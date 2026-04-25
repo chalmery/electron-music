@@ -4,7 +4,8 @@ import icon from "/icons/music@6x.png";
 import pageEvent from "@/event/pageEvent";
 import eventManager from "@/event/eventManager";
 const dataEvent = window.dataEvent;
-import {resolvePictureToBase64} from "@/util/filtUtils";
+import {getFileBlobByMetaData} from "@/util/filtUtils";
+import {fileTypeEnum} from "@/enums/enums";
 
 export default function Lyrics(props) {
   /**
@@ -37,7 +38,7 @@ export default function Lyrics(props) {
     eventManager.subscribe(pageEvent.CURRENT_TIME.value, handleCurrentTime);
 
     //查询歌词
-    electron.ipcRenderer.on(dataEvent.eventName.LRC_CALLBACK.value, (event, data) => {
+    window.electronAPI.ipcRenderer.on(dataEvent.eventName.LRC_CALLBACK.value, (event, data) => {
       setLrc(data);
       lrcRef.current = data;
     });
@@ -45,17 +46,19 @@ export default function Lyrics(props) {
     return () => {
       eventManager.unsubscribe(pageEvent.CLICK_MUSIC.value, handleEvent);
       eventManager.unsubscribe(pageEvent.CURRENT_TIME.value, handleCurrentTime);
-      electron.ipcRenderer.removeAllListeners(dataEvent.eventName.LRC_CALLBACK.value);
+      window.electronAPI.ipcRenderer.removeAllListeners(dataEvent.eventName.LRC_CALLBACK.value);
     };
   }, []);
 
   const handleEvent = (data) => {
-    //放置当前播放歌曲元数据
     setMetadata(data);
-    //解析专辑为base64
-    resolvePictureToBase64(data.picture,(base64)=>{
-      setPicture(base64)
-    });
+    if (data.picture) {
+      getFileBlobByMetaData(data, fileTypeEnum.picture, (blobUrl) => {
+        setPicture(blobUrl);
+      });
+    } else {
+      setPicture(null);
+    }
   };
 
   /**
@@ -102,7 +105,7 @@ export default function Lyrics(props) {
     width: "100%",
     backdropFilter: "blur(8px)",
   };
-  if (metadata) {
+  if (picture) {
     containerStyle.backgroundImage = `url(${picture})`;
   }
   const lyricsClass = show ? "lyrics-container show" : "lyrics-container hide";
@@ -115,7 +118,7 @@ export default function Lyrics(props) {
             <div>
               <img
                 className="lrc-left-picture"
-                src={(metadata === null)||(metadata.picture === null) ? icon : `${picture}`}
+                src={picture ?? icon}
                 alt={icon}
               />
               <div className="lrc-left-info">

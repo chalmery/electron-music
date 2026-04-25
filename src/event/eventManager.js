@@ -1,5 +1,7 @@
 const eventManager = {
     subscribers: {},
+    lastPlayed: null,
+    lastDir: null,
 
     subscribe(event, callback) {
         if (!this.subscribers[event]) {

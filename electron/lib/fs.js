@@ -43,13 +43,11 @@ function save(fileName, data, callback) {
  * @param data
  */
 function saveSync(fileName, data) {
-  fs.writeFileSync(getPath(fileName), data, (err) => {
-    if (err) {
-      console.log("save error " + err);
-      return;
-    }
-    console.log("Data written successfully to disk");
-  });
+  try {
+    fs.writeFileSync(getPath(fileName), data);
+  } catch (err) {
+    console.log("saveSync error " + err);
+  }
 }
 
 /**

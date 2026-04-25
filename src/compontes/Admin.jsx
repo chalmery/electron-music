@@ -1,47 +1,43 @@
-import React, {useState} from "react";
-
+import React, { useState } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import LeftMenu from "@/compontes/left/LeftMenu";
-import {Redirect} from "react-router-dom";
 import Local from "@/compontes/center/Local";
 import Online from "@/compontes/center/Online";
-import {CacheRoute, CacheSwitch} from "react-router-cache-route";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import MusicBar from "@/compontes/footer/Footer";
 import Playlist from "@/compontes/center/Playlist";
 import Love from "@/compontes/center/Love";
 import Lyrics from "@/compontes/footer/Lyrics";
 
-const {Footer, Sider, Content} = Layout;
+const { Footer, Sider, Content } = Layout;
 
 export default function Admin() {
-  //是否展示歌词页面
-  const [show, setShow] = useState(false)
-
-  const [metadata, setMetadata] = useState(null)
+  const [show, setShow] = useState(false);
+  const [metadata, setMetadata] = useState(null);
 
   const handleStatusChange = (status, metadata) => {
-    setShow(status)
-    setMetadata(metadata)
-  }
+    setShow(status);
+    setMetadata(metadata);
+  };
 
   return (
     <div>
-      <Lyrics show={show} metadata={metadata}/>
+      <Lyrics show={show} metadata={metadata} />
       <Layout>
         <Sider>
-          <LeftMenu/>
+          <LeftMenu />
         </Sider>
         <Content>
-          <CacheSwitch>
-            <Redirect from="/" exact to="/"/>
-            <CacheRoute path="/local" component={Local} style={{flex: 1}}/>
-            <CacheRoute path="/online" component={Online}/>
-            <CacheRoute path="/playlist" component={Playlist}/>
-            <CacheRoute path="/love" component={Love}/>
-          </CacheSwitch>
+          <Routes>
+            <Route path="/" element={<Navigate to="/local" replace />} />
+            <Route path="/local" element={<Local />} />
+            <Route path="/online" element={<Online />} />
+            <Route path="/playlist" element={<Playlist />} />
+            <Route path="/love" element={<Love />} />
+          </Routes>
         </Content>
         <Footer className="footer">
-          <MusicBar onStatusChange={handleStatusChange}/>
+          <MusicBar onStatusChange={handleStatusChange} />
         </Footer>
       </Layout>
     </div>

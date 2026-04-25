@@ -1,5 +1,6 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage } = require("electron");
+const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain } = require("electron");
 const { join } = require("path");
+const fs = require("fs");
 
 process.env.DIST = join(__dirname, "../..");
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : join(process.env.DIST, "../public");
@@ -52,12 +53,10 @@ function createWindow() {
     ],
     webPreferences: {
       preload,
-      webviewTag: true,
-      webSecurity: true, // 启用安全策略
-      nodeIntegration: true,
-      enableRemoteModule: true,
-      contextIsolation: false,
-      nodeIntegrationInSubFrames: true,
+      sandbox: false,
+      webSecurity: true,
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
   loadFile();
@@ -89,6 +88,10 @@ function loadFile() {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle('read-file', async (event, filePath) => {
+    return fs.readFileSync(filePath);
+  });
+
   createWindow();
   const icon = nativeImage.createFromPath(join(process.env.PUBLIC, "/icons/music@6x.png"));
   const resizedIcon = icon.resize({ width: 128, height: 128 });
