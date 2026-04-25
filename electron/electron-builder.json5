@@ -2,49 +2,68 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  appId: "electron-music",
-  productName: "electron-music",
+  appId: "com.chalmery.electron-music",
+  productName: "ElectronMusic",
   copyright: "Copyright © 2023 ${author}",
   asar: true,
+  compression: "maximum",
+  removePackageScripts: true,
   directories: {
     output: "release",
     buildResources: "public"
   },
   files: [
-    "dist"
+    "dist/**/*"
   ],
   win: {
     icon: "public/icons/music@x6.png",
-    artifactName: "${productName}-win-${version}.${ext}",
+    artifactName: "${productName}-win-${version}-${arch}.${ext}",
     target: [
       {
         target: "zip",
-        arch: [
-          "x64"
-        ]
+        arch: ["x64"]
+      },
+      {
+        target: "nsis",
+        arch: ["x64"]
       }
     ]
   },
+  nsis: {
+    oneClick: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false
+  },
   mac: {
-    icon: 'public/icons/music@x6.png',
-    category: 'Productivity',
+    icon: "public/icons/music@x6.png",
+    category: "public.app-category.music",
+    artifactName: "${productName}-mac-${version}-${arch}.${ext}",
+    hardenedRuntime: true,
+    gatekeeperAssess: false,
     target: [
       {
-        target: 'default',
-        arch: [
-          'arm64',
-          'x64'
-        ]
+        target: "dmg",
+        arch: ["arm64", "x64"]
+      },
+      {
+        target: "zip",
+        arch: ["arm64", "x64"]
       }
     ]
   },
   linux: {
     icon: "public/icons/music@x6.png",
+    category: "Audio",
+    artifactName: "${productName}-linux-${version}-${arch}.${ext}",
     target: [
-      "AppImage",
-      "tar.gz"
-    ],
-    "category": "Audio",
-    artifactName: "${productName}-Linux-${version}.${ext}"
+      {
+        target: "AppImage",
+        arch: ["x64"]
+      },
+      {
+        target: "tar.gz",
+        arch: ["x64"]
+      }
+    ]
   }
 }
